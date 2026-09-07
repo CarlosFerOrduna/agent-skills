@@ -6,10 +6,10 @@ The plugin auto-injects the `working-agreements` contract into the first user
 message of each session, and auto-registers a skills directory so opencode
 discovers the skills with no manual config edits.
 
-The plugin resolves the skills directory from both locations automatically:
-
-- the repo's `skills/` (when loaded from a git-backed spec)
-- `~/.agents/skills/` (when installed with `python install.py`)
+The plugin registers a single skills directory so opencode never loads the same
+skill twice. It prefers `~/.agents/skills` when that directory already contains
+the contract (opencode discovers it natively), and falls back to the repo's
+`skills/` when the home install is absent (fresh git-backed spec install).
 
 ## Install
 

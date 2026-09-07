@@ -57,12 +57,23 @@ export const WorkingAgreementsPlugin = async ({ directory }) => {
   const homeDir = os.homedir();
   const envConfigDir = normalizePath(process.env.OPENCODE_CONFIG_DIR, homeDir);
 
-  // Resolve the skills directory for both install styles:
-  //  - git-backed plugin spec: skills live next to the repo (../../skills)
-  //  - plugin file copied to the global plugins dir: skills live in ~/.agents/skills
+// Resolve the skills directory for both install styles, preferring a single
+// source so opencode never sees the same skill name twice:
+//  - ~/.agents/skills wins when it already contains the contract, because
+//    opencode discovers that directory natively;
+//  - otherwise the repo's skills/ (git-backed plugin spec) is registered, which
+//    covers the fresh-machine install where ~/.agents/skills does not exist.
   const repoSkillsDir = path.resolve(__dirname, '../../skills');
   const homeSkillsDir = path.join(homeDir, '.agents', 'skills');
-  const skillsDirs = [repoSkillsDir, homeSkillsDir].filter((dir) => fs.existsSync(dir));
+  const homeContract = path.join(homeSkillsDir, 'working-agreements', 'SKILL.md');
+  let skillsDirs = [];
+  if (fs.existsSync(homeContract)) {
+    skillsDirs = [homeSkillsDir];
+  } else if (fs.existsSync(repoSkillsDir)) {
+    skillsDirs = [repoSkillsDir];
+  } else if (fs.existsSync(homeSkillsDir)) {
+    skillsDirs = [homeSkillsDir];
+  }
 
   // Helper to generate bootstrap content (cached after first call)
   const getBootstrapContent = () => {
