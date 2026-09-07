@@ -42,15 +42,21 @@ module.exports = {
   parserPreset: {
     parserOpts: {
       // Allow an optional leading gitmoji before `type(scope): subject`.
+      // Named groups make the correspondence explicit and resilient to the
+      // parser's positional fallback (matches[i + 1]).
+      // The type group accepts any word; `type-enum` then reports the invalid
+      // value with a readable message instead of a parse failure.
       headerPattern:
-        /^(\p{Extended_Pictographic}\uFE0F?\s*)?(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(?:\(([^)]+)\))?!?: (.*)$/u,
-      headerCorrespondence: ["", "", "type", "scope", "subject"],
+        /^(?<emoji>\p{Extended_Pictographic}\uFE0F?\s*)?(?<type>\w+)(?:\((?<scope>[^)]+)\))?!?: (?<subject>.*)$/u,
+      headerCorrespondence: ["emoji", "type", "scope", "subject"],
     },
   },
   rules: {
     // We enforce gitmoji + an emoji-aware length below; disable the stock rule.
     "header-max-length": [0],
     "type-enum": [2, "always", VALID_TYPES],
+    "header-leading-gitmoji": [2, "always"],
+    "header-max-length-no-emoji": [2, "always"],
   },
   plugins: [
     {
