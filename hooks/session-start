@@ -11,27 +11,47 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 # Read using-working-agreements content
 bootstrap_content=$(cat "${PLUGIN_ROOT}/skills/using-working-agreements/SKILL.md" 2>&1 || echo "Error reading using-working-agreements skill")
 
-# Escape string for JSON embedding using bash parameter substitution.
-escape_for_json() {
-    local s="$1"
-    s="${s//\\/\\\\}"
-    s="${s//\"/\\\"}"
-    s="${s//$'\n'/\\n}"
-    s="${s//$'\r'/\\r}"
-    s="${s//$'\t'/\\t}"
-    printf '%s' "$s"
-}
+# Prefer a real Python interpreter for correct JSON escaping (handles control
+# bytes and multibyte sequences); fall back to bash parameter substitution.
+if command -v python3 >/dev/null 2>&1; then
+    PY="python3"
+elif command -v python >/dev/null 2>&1; then
+    PY="python"
+fi
 
-bootstrap_escaped=$(escape_for_json "$bootstrap_content")
-session_context="<EXTREMELY_IMPORTANT>\nYou have working agreements to honor.\n\n**Below is the full content of your 'working-agreements:using-working-agreements' skill - your introduction to the project standards. For the full standards, use the 'Skill' tool to load 'working-agreements':**\n\n${bootstrap_escaped}\n</EXTREMELY_IMPORTANT>"
+session_context="<EXTREMELY-IMPORTANT>
+You have working agreements to honor.
+
+**Below is the full content of your 'working-agreements:using-working-agreements' skill - your introduction to the project standards. For the full standards, use the 'Skill' tool to load 'working-agreements':**
+
+${bootstrap_content}
+</EXTREMELY-IMPORTANT>"
+
+if [ -n "${PY:-}" ]; then
+    # json.dumps returns a complete JSON string literal (surrounding quotes included).
+    additional_context=$(printf '%s' "$session_context" | "$PY" -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+else
+    # Fallback: minimal escape (\\, ", newline, \r, \t) and explicit quotes.
+    # Runs only when no Python interpreter is available.
+    escape_for_json() {
+        local s="$1"
+        s="${s//\\/\\\\}"
+        s="${s//\"/\\\"}"
+        s="${s//$'\n'/\\n}"
+        s="${s//$'\r'/\\r}"
+        s="${s//$'\t'/\\t}"
+        printf '%s' "$s"
+    }
+    additional_context="\"$(escape_for_json "$session_context")\""
+fi
 
 # Output context injection as JSON.
 # Claude Code expects hookSpecificOutput.additionalContext (nested).
 # Other platforms may consume additionalContext (top-level).
 if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
-  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": %s\n  }\n}\n' "$additional_context" | cat
 else
-  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context" | cat
+  printf '{\n  "additionalContext": %s\n}\n' "$additional_context" | cat
 fi
 
 exit 0

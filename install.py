@@ -6,10 +6,12 @@ Copies every skill in ./skills to the user's global skills directory
 other tools following the AGENTS.md / SKILL.md convention.
 
 Usage:
-    python install.py
+    python install.py                # install new skills, skip existing ones
+    python install.py --force        # replace existing skills
 """
 from __future__ import annotations
 
+import argparse
 import shutil
 import sys
 from pathlib import Path
@@ -19,7 +21,19 @@ SOURCE_DIR = REPO_ROOT / "skills"
 DEST_ROOT = Path.home() / ".agents" / "skills"
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Install agent skills to ~/.agents/skills")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="replace skills that already exist at the destination",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    args = parse_args()
+
     if not SOURCE_DIR.is_dir():
         print(f"ERROR: skills directory not found: {SOURCE_DIR}", file=sys.stderr)
         return 1
@@ -33,9 +47,14 @@ def main() -> int:
 
     for skill in skills:
         dest = DEST_ROOT / skill.name
-        print(f"Installing '{skill.name}' -> {dest}")
         if dest.exists():
+            if not args.force:
+                print(f"SKIP '{skill.name}' -> {dest} (exists; use --force to replace)")
+                continue
+            print(f"REPLACE '{skill.name}' -> {dest}")
             shutil.rmtree(dest)
+        else:
+            print(f"INSTALL '{skill.name}' -> {dest}")
         shutil.copytree(skill, dest)
 
     print()
