@@ -4,12 +4,12 @@ Prompt-based standards decay; a lint error corrects faster and cheaper than a
 13 KB prompt. These templates turn the conventions into machine-checked gates
 for the consuming project repo (not for the skills repo itself).
 
-| Tool       | Enforces                          | File                        |
-| ---------- | --------------------------------- | --------------------------- |
-| commitlint | gitmoji + 11 types + header ≤72   | `commitlint.config.cjs`   |
-| ESLint     | `unicorn/filename-case` (kebab)   | `eslint.config.mjs`         |
-| gitleaks   | no secrets in commits             | `.gitleaks.toml`            |
-| pre-commit | gitleaks + hygiene hooks          | `.pre-commit-config.yaml`   |
+| Tool       | Enforces                        | File                      |
+| ---------- | ------------------------------- | ------------------------- |
+| commitlint | gitmoji + 11 types + header ≤72 | `commitlint.config.cjs`   |
+| ESLint     | `unicorn/filename-case` (kebab) | `eslint.config.mjs`       |
+| gitleaks   | no secrets in commits           | `.gitleaks.toml`          |
+| pre-commit | gitleaks + hygiene hooks        | `.pre-commit-config.yaml` |
 
 What stays in the skills (not lintable):
 
@@ -64,7 +64,7 @@ pre-commit autoupdate
 ```
 
 > Do not install gitleaks from npm (`pipx install gitleaks`, `pnpm add -D
-> gitleaks`, `scoop/bower per platform`): the npm `gitleaks` package is an
+gitleaks`, `scoop/bower per platform`): the npm `gitleaks` package is an
 > unrelated third-party mirror. The official distribution channels are the
 > GitHub release binaries, `brew`, `choco`, and the pre-commit hook above.
 

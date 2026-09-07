@@ -28,7 +28,9 @@ try {
   copyFileSync(configSrc, path.join(scratch, "commitlint.config.cjs"));
   run("git init -q");
 
-  const setup = run(`${pm} add -D @commitlint/cli @commitlint/config-conventional`);
+  const setup = run(
+    `${pm} add -D @commitlint/cli @commitlint/config-conventional`,
+  );
   if (setup !== 0) {
     console.error(`setup failed (${pm} add exit=${setup})`);
     process.exit(2);
@@ -46,7 +48,11 @@ try {
   }
 
   const long = `✨ feat(auth): ${"x".repeat(95)}`;
-  runCase("valid gitmoji header", 0, "✨ feat(auth): add JWT refresh-token rotation");
+  runCase(
+    "valid gitmoji header",
+    0,
+    "✨ feat(auth): add JWT refresh-token rotation",
+  );
   runCase("missing gitmoji", 1, "feat(auth): add JWT refresh-token rotation");
   runCase("invalid type", 1, "✨ banana(auth): add thing");
   runCase("header over 72 (no emoji)", 1, long);

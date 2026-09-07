@@ -26,9 +26,7 @@ Add the plugin to your `opencode.json` (global at
 
 ```json
 {
-  "plugin": [
-    "working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"
-  ]
+  "plugin": ["working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"]
 }
 ```
 

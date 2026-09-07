@@ -21,28 +21,28 @@ The `type` must be one of: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`,
 The emoji identifies the change, the type must **always** be valid. Critical
 hotfixes and security fixes are still a `fix`, never a new type:
 
-| Gitmoji | Type      | Meaning                           |
-| ------- | --------- | --------------------------------- |
-| ✨      | `feat`    | New feature                       |
-| 🐛      | `fix`     | Bug fix                           |
-| 🚑️      | `fix`     | Critical hotfix                   |
-| 🔒️      | `fix`     | Security fix or hardening         |
-| 📝      | `docs`    | Documentation                     |
-| 🎨      | `style`   | Formatting/style, no logic change |
-| ♻️      | `refactor`| Refactoring                       |
-| ⚡️      | `perf`    | Performance improvement           |
-| ✅      | `test`    | Tests                             |
-| 👷      | `build`   | Build changes                     |
-| 💚      | `ci`      | CI changes                        |
-| 🔧      | `chore`   | Chore/configuration               |
-| ⏪️      | `revert`  | Revert                            |
-| ⬆️      | `chore`   | Dependency upgrade                |
-| ⬇️      | `chore`   | Dependency downgrade              |
-| ➕      | `chore`   | Add dependency                    |
-| ➖      | `chore`   | Remove dependency                 |
-| 🔥      | `chore`   | Remove code or files              |
-| 🗃️      | `chore`   | Database schema/migration         |
-| 🚀      | `ci`      | Deploy/release                    |
+| Gitmoji | Type       | Meaning                           |
+| ------- | ---------- | --------------------------------- |
+| ✨      | `feat`     | New feature                       |
+| 🐛      | `fix`      | Bug fix                           |
+| 🚑️      | `fix`      | Critical hotfix                   |
+| 🔒️      | `fix`      | Security fix or hardening         |
+| 📝      | `docs`     | Documentation                     |
+| 🎨      | `style`    | Formatting/style, no logic change |
+| ♻️      | `refactor` | Refactoring                       |
+| ⚡️      | `perf`     | Performance improvement           |
+| ✅      | `test`     | Tests                             |
+| 👷      | `build`    | Build changes                     |
+| 💚      | `ci`       | CI changes                        |
+| 🔧      | `chore`    | Chore/configuration               |
+| ⏪️      | `revert`   | Revert                            |
+| ⬆️      | `chore`    | Dependency upgrade                |
+| ⬇️      | `chore`    | Dependency downgrade              |
+| ➕      | `chore`    | Add dependency                    |
+| ➖      | `chore`    | Remove dependency                 |
+| 🔥      | `chore`    | Remove code or files              |
+| 🗃️      | `chore`    | Database schema/migration         |
+| 🚀      | `ci`       | Deploy/release                    |
 
 ## Scope
 

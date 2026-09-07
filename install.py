@@ -9,6 +9,7 @@ Usage:
     python install.py                # install new skills, skip existing ones
     python install.py --force        # replace existing skills
 """
+
 from __future__ import annotations
 
 import argparse
@@ -22,7 +23,9 @@ DEST_ROOT = Path.home() / ".agents" / "skills"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Install agent skills to ~/.agents/skills")
+    parser = argparse.ArgumentParser(
+        description="Install agent skills to ~/.agents/skills"
+    )
     parser.add_argument(
         "--force",
         action="store_true",
@@ -59,7 +62,9 @@ def main() -> int:
 
     print()
     print(f"Done. Skills installed to {DEST_ROOT}")
-    print("Restart your editor (Zed / opencode / Claude Code) to pick up the new skills.")
+    print(
+        "Restart your editor (Zed / opencode / Claude Code) to pick up the new skills."
+    )
     return 0
 
 
