@@ -16,7 +16,7 @@ jobs:
         with:
           version: 9
       - name: Run commitlint smoke test
-        run: bash scripts/smoke-commitlint.sh
+        run: node scripts/smoke-commitlint.mjs
 
   skills-consistency:
     runs-on: ubuntu-latest

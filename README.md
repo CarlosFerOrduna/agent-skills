@@ -114,6 +114,29 @@ ESLint `unicorn/filename-case`, and gitleaks on pre-commit. The skills keep only
 what tooling cannot express (repository intent, synchronized enums, Joi as the
 source of truth).
 
+## Verification
+
+Run the same gates locally before every commit with npm (no GitHub access
+required):
+
+```
+npm run check
+```
+
+- `check:commitlint` runs `scripts/smoke-commitlint.mjs`, which exercises the 5
+  commitlint cases (valid, missing gitmoji, invalid type, over-72 header,
+  breaking) against a scratch repo.
+- `check:skills` runs `scripts/check-skills.py`, which fails on drift: skill
+  frontmatter (name/version/description) vs. `package.json`, the contract stack
+  index vs. the actual `skills/` dirs, README mentions, and stale references.
+
+Use `npm run check` rather than `pnpm check`: this repository ships no
+dependencies, and pnpm's script runner runs an implicit install first, which
+drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo.
+
+`.github/workflows/ci.yml` mirrors these two checks in CI, so the same gate runs
+on GitHub when Actions is available for the repository.
+
 ## Anatomy
 
 ```
@@ -142,7 +165,7 @@ source of truth).
 │   └── workflows/
 │       └── ci.yml               # commitlint smoke + skills consistency/drift
 ├── scripts/
-│   ├── smoke-commitlint.sh      # runs the 5 commitlint cases against a scratch repo
+│   ├── smoke-commitlint.mjs     # runs the 5 commitlint cases against a scratch repo
 │   └── check-skills.py          # validates frontmatter, versions, index, README
 ├── skills/
 │   ├── working-agreements/      # always-on contract (injected) + stack index
@@ -157,5 +180,6 @@ source of truth).
 
 1. Create `skills/<name>/SKILL.md`.
 2. Add a YAML frontmatter block with `name`, `version`, and a `description` that tells the model when to invoke it.
-3. Run `python install.py` (or copy the folder manually).
-4. Restart your editor.
+3. Run `npm run check` to validate frontmatter, index, and README drift.
+4. Run `python install.py` (or copy the folder manually).
+5. Restart your editor.

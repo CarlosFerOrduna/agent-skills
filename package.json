@@ -4,10 +4,19 @@
   "description": "Working-agreements engineering standards skills for Claude Code and opencode",
   "type": "module",
   "main": ".opencode/plugins/working-agreements.js",
+  "scripts": {
+    "check": "npm run check:commitlint && npm run check:skills",
+    "check:commitlint": "node scripts/smoke-commitlint.mjs",
+    "check:skills": "python scripts/check-skills.py"
+  },
   "keywords": [
     "opencode-plugin",
     "skills",
     "engineering-standards",
     "conventions"
-  ]
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2"
+  }
 }
