@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate the skills repo consistency.
 
-Checks, run in CI (see .github/workflows/ci.yml):
+Checks (run locally via `npm run check:skills`):
   - every skills/<name>/SKILL.md has valid frontmatter (name == folder,
     non-empty description, version matching package.json);
   - the "Stack skills" index in working-agreements matches the actual skill set;
