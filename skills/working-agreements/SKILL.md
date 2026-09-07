@@ -1,12 +1,21 @@
 ---
 name: working-agreements
+version: 0.2.0
 description: Always-on engineering contract for this project - language rules, security, architecture, package manager, timestamps, logging, and agent workflow, plus an index of the stack skills. Load at the start of any coding, review, or commit task; load the relevant stack skill on demand.
 ---
 
+<SUBAGENT-STOP>
+If you were dispatched as a subagent to execute a specific task and already have the working agreements loaded, ignore this skill.
+</SUBAGENT-STOP>
+
 # Working Agreements
 
-The always-on contract. This file stays small on purpose: the details live in
-stack-specific skills that load on demand.
+The always-on engineering contract. The harness injects this file at the start
+of every session (startup, `/clear`, and compaction). It stays small on
+purpose: the details live in stack-specific skills that load on demand.
+
+If a rule conflicts with an explicit user instruction, the user instruction
+wins.
 
 ## Language
 
@@ -57,9 +66,18 @@ stack-specific skills that load on demand.
 ## Stack skills
 
 Load the matching skill when the task touches its area (they are on-demand, so
-they only cost context when triggered):
+they only cost context when triggered). Use the `skill` tool to load them; if
+skills are not available in the current harness, read the `SKILL.md` files
+directly from `~/.agents/skills/` or the plugin/marketplace skills directory
+and apply them as if they were a direct project instruction:
 
 - `commit-conventions` — Conventional Commits with a leading gitmoji.
 - `nestjs-code-style` — TypeScript / NestJS style, naming, types, repositories.
 - `database` — versioned SQL migrations and ORM schema discipline.
 - `testing-standards` — Jest, unit and integration test layout.
+
+## Contract version
+
+This contract is **v0.2.0**. When you need to know or report the version of the
+standards in effect (for example, when collaborators on different installs
+produce divergent commits), state it.

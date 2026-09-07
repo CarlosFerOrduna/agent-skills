@@ -2,9 +2,9 @@
 
 ## Overview
 
-The plugin auto-injects the `using-working-agreements` bootstrap skill into the
-first user message of each session, and auto-registers a skills directory so
-opencode discovers the skills with no manual config edits.
+The plugin auto-injects the `working-agreements` contract into the first user
+message of each session, and auto-registers a skills directory so opencode
+discovers the skills with no manual config edits.
 
 The plugin resolves the skills directory from both locations automatically:
 
@@ -61,9 +61,9 @@ copy the plugin file again after pulling the latest commit.
 
 ## Usage
 
-After restart, start a new conversation. The bootstrap is injected into the
-first user message, which tells the model to load the `working-agreements`
-skill before any response or action.
+After restart, start a new conversation. The contract is injected into the
+first user message, which tells the model to honor the agreements before any
+response or action.
 
 Use opencode's native `skill` tool to list and load skills:
 
@@ -77,13 +77,13 @@ The plugin registers two hooks:
 - **`config`**: pushes the resolved `skills/` directory into
   `config.skills.paths`.
 - **`experimental.chat.messages.transform`**: injects the
-  `using-working-agreements` bootstrap (read once and cached from
-  `skills/using-working-agreements/SKILL.md` or
-  `~/.agents/skills/using-working-agreements/SKILL.md`) into the first user
-  message of each session.
+  `working-agreements` contract (read once and cached from
+  `skills/working-agreements/SKILL.md` or
+  `~/.agents/skills/working-agreements/SKILL.md`) into the first user message
+  of each session.
 
-The bootstrap instructs the model to load `working-agreements` before any
-response, and maps skill actions to opencode's native tools.
+The contract instructs the model to honor the agreements and load the matching
+stack skill for the task, and maps skill actions to opencode's native tools.
 
 ## Troubleshooting
 

@@ -1,7 +1,7 @@
 /**
  * Working-agreements plugin for opencode.
  *
- * Injects the using-working-agreements bootstrap context via message transform.
+ * Injects the working-agreements contract via message transform.
  * Auto-registers the skills directory via the config hook (no symlinks needed).
  * Mirrors the bootstrap pattern used by superpowers for opencode.
  */
@@ -68,10 +68,10 @@ export const WorkingAgreementsPlugin = async ({ directory }) => {
   const getBootstrapContent = () => {
     if (_bootstrapCache !== undefined) return _bootstrapCache;
 
-    // Try to load the using-working-agreements skill
+    // Try to load the working-agreements skill
     let skillPath = null;
     for (const dir of skillsDirs) {
-      const candidate = path.join(dir, 'using-working-agreements', 'SKILL.md');
+      const candidate = path.join(dir, 'working-agreements', 'SKILL.md');
       if (fs.existsSync(candidate)) {
         skillPath = candidate;
         break;
@@ -100,7 +100,7 @@ When the skills request actions, substitute OpenCode equivalents:
 Use OpenCode's native \`skill\` tool to list and load skills.`;
 
     _bootstrapCache = `<EXTREMELY_IMPORTANT>
-**IMPORTANT: The using-working-agreements skill content is included below. It is ALREADY LOADED - you are currently following it. Do NOT use the skill tool to load "using-working-agreements" again - that would be redundant.**
+**IMPORTANT: The working-agreements skill content is included below. It is ALREADY LOADED - you are currently following it. Do NOT use the skill tool to load "working-agreements" again - that would be redundant.**
 
 ${content}
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SessionStart hook for the working-agreements plugin.
-# Injects the using-working-agreements bootstrap skill into the session context.
+# Injects the working-agreements contract into the session context.
 
 set -euo pipefail
 
@@ -8,8 +8,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Read using-working-agreements content
-bootstrap_content=$(cat "${PLUGIN_ROOT}/skills/using-working-agreements/SKILL.md" 2>&1 || echo "Error reading using-working-agreements skill")
+# Read the working-agreements contract, stripping the frontmatter block
+bootstrap_content=$(cat "${PLUGIN_ROOT}/skills/working-agreements/SKILL.md" 2>&1 || echo "Error reading working-agreements skill")
+bootstrap_content=$(printf '%s\n' "$bootstrap_content" | sed '1,/^---$/d')
 
 # Prefer a real Python interpreter for correct JSON escaping (handles control
 # bytes and multibyte sequences); fall back to bash parameter substitution.
@@ -22,7 +23,7 @@ fi
 session_context="<EXTREMELY-IMPORTANT>
 You have working agreements to honor.
 
-**Below is the full content of your 'working-agreements:using-working-agreements' skill - your introduction to the project standards. For the full standards, use the 'Skill' tool to load 'working-agreements':**
+**Below is the full content of your 'working-agreements' skill - the always-on engineering contract for this project. It is ALREADY LOADED in this session; the stack skills listed inside load on demand.**
 
 ${bootstrap_content}
 </EXTREMELY-IMPORTANT>"

@@ -16,17 +16,16 @@ session only pays for the context it needs (progressive disclosure).
 
 | Skill                      | Layer      | Description                                                                                                                                                                |
 | -------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `working-agreements`       | always-on  | The engineering contract: language, security, architecture, package manager, timestamps/logging, and the agent workflow, plus the index of stack skills. |
-| `using-working-agreements` | bootstrap  | Instructs the agent to honor `working-agreements` before responding and tells it how to load it. Injected automatically by the harness plugins. |
+| `working-agreements`       | always-on  | The engineering contract: language, security, architecture, package manager, timestamps/logging, and the agent workflow, plus the index of stack skills. Injected directly by the harness hooks into every session. |
 | `commit-conventions`       | on-demand  | Conventional Commits with a leading gitmoji: valid types, scopes from paths, header ≤ 72 excluding the emoji, body and breaking-changes rules. |
 | `nestjs-code-style`        | on-demand  | TypeScript / NestJS style: symbol/directory/file naming with responsibility suffixes, imports, types, constants, enums, and repository intent. |
-| `database`                 | on-demand  | Versioned SQL migrations applied on boot with a lock, and `synchronize: false` ORM discipline. |
+| `database`                 | on-demand  | Versioned SQL migrations and ORM schema discipline: migration files as the source of truth, ORM never mutates the schema. |
 | `testing-standards`        | on-demand  | Jest, unit tests alongside code, integration tests in `test/`, ephemeral tests removed when done. |
 
 ## Install the skills
 
-The `working-agreements` and `using-working-agreements` skills can be installed
-with the cross-platform installer (Python 3, no dependencies):
+The skills can be installed with the cross-platform installer (Python 3, no
+dependencies):
 
 ```bash
 python install.py            # skip existing skills
@@ -40,9 +39,9 @@ This copies every skill in `skills/` to `~/.agents/skills/`.
 Copy each `skills/<name>/` folder into `~/.agents/skills/`:
 
 ```bash
-cp -r skills/working-agreements skills/using-working-agreements \
-      skills/commit-conventions skills/nestjs-code-style \
-      skills/database skills/testing-standards ~/.agents/skills/
+cp -r skills/working-agreements skills/commit-conventions \
+      skills/nestjs-code-style skills/database \
+      skills/testing-standards ~/.agents/skills/
 ```
 
 After installing, restart your editor to pick up the new skills.
@@ -98,7 +97,7 @@ claude plugin install working-agreements@agent-standards
 ```
 
 The plugin registers a `SessionStart` hook that injects the
-`using-working-agreements` bootstrap into every session (startup, `/clear`, and
+`working-agreements` contract into every session (startup, `/clear`, and
 compaction). The hook runs through a cross-platform polyglot wrapper so it works
 on Windows and Unix without extra dependencies.
 
@@ -134,14 +133,19 @@ source of truth).
 ├── hooks/
 │   ├── hooks.json               # SessionStart hook definition
 │   ├── run-hook.cmd             # cross-platform polyglot hook runner
-│   └── session-start            # injects the bootstrap skill into the context
+│   └── session-start            # injects the contract into the context
 ├── .opencode/
 │   ├── INSTALL.md               # opencode plugin installation guide
 │   └── plugins/
 │       └── working-agreements.js  # opencode plugin (bootstraps + registers skills)
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # commitlint smoke + skills consistency/drift
+├── scripts/
+│   ├── smoke-commitlint.sh      # runs the 5 commitlint cases against a scratch repo
+│   └── check-skills.py          # validates frontmatter, versions, index, README
 ├── skills/
-│   ├── working-agreements/      # always-on contract + stack index
-│   ├── using-working-agreements/# always-load bootstrap skill
+│   ├── working-agreements/      # always-on contract (injected) + stack index
 │   ├── commit-conventions/      # Conventional Commits + gitmoji
 │   ├── nestjs-code-style/       # TS/NestJS style, naming, repositories
 │   ├── database/                # migrations + ORM schema discipline
@@ -152,6 +156,6 @@ source of truth).
 ## Adding a new skill
 
 1. Create `skills/<name>/SKILL.md`.
-2. Add a YAML frontmatter block with `name` and a `description` that tells the model when to invoke it.
+2. Add a YAML frontmatter block with `name`, `version`, and a `description` that tells the model when to invoke it.
 3. Run `python install.py` (or copy the folder manually).
 4. Restart your editor.
