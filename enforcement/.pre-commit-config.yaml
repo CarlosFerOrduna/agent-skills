@@ -6,9 +6,10 @@
 #   - gitleaks: secret detection before anything reaches a commit.
 #   - commitlint: not wired here because it needs the commit message; use the
 #     husky `.git/hooks/commit-msg` snippet from enforcement/README.md instead.
+# `pre-commit autoupdate` to refresh the pinned revisions.
 repos:
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.4
+    rev: v8.30.1
     hooks:
       - id: gitleaks
 

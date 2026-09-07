@@ -53,15 +53,29 @@ boundaries) is enforced only if the team opts in.
 
 ## Setup (gitleaks on commit)
 
+Scan secrets with the pre-commit hook; it downloads the gitleaks binary
+itself, so no manual install is needed:
+
 ```bash
-pnpm add -D gitleaks
-# or pipx install gitleaks / scoop/bower per platform
+cp enforcement/.pre-commit-config.yaml <project>/.pre-commit-config.yaml
+pre-commit install        # wires the gitleaks + hygiene hooks
+# refresh pinned revisions periodically:
+pre-commit autoupdate
+```
+
+> Do not install gitleaks from npm (`pipx install gitleaks`, `pnpm add -D
+> gitleaks`, `scoop/bower per platform`): the npm `gitleaks` package is an
+> unrelated third-party mirror. The official distribution channels are the
+> GitHub release binaries, `brew`, `choco`, and the pre-commit hook above.
+
+Copy the baseline too:
+
+```bash
 cp enforcement/.gitleaks.toml <project>/.gitleaks.toml
 ```
 
-With the pre-commit framework (or a plain `pre-commit` hook, or CI), allowing
-gitleaks on top of `git secrets` equivalents. Allowlist entries only for
-fixture/test values, never real credentials.
+Allowlist entries only for fixture/test values, never real credentials. Both
+the pre-commit hook and a CI gate run gitleaks against staged/committed files.
 
 ## Enforcement priority
 
