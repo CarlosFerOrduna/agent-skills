@@ -100,8 +100,6 @@ When the skills request actions, substitute OpenCode equivalents:
 Use OpenCode's native \`skill\` tool to list and load skills.`;
 
     _bootstrapCache = `<EXTREMELY_IMPORTANT>
-You have working agreements.
-
 **IMPORTANT: The using-working-agreements skill content is included below. It is ALREADY LOADED - you are currently following it. Do NOT use the skill tool to load "using-working-agreements" again - that would be redundant.**
 
 ${content}
