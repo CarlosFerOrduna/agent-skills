@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-plugin-marketplace.json",
+  "name": "agent-standards",
+  "owner": {
+    "name": "Fernando Orduna"
+  },
+  "plugins": [
+    {
+      "name": "working-agreements",
+      "description": "Injects the working-agreements engineering standards into every Claude Code session at startup.",
+      "version": "0.1.0",
+      "source": {
+        "source": "github",
+        "repo": "CarlosFerOrduna/agent-skills"
+      }
+    }
+  ]
+}

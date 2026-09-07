@@ -55,17 +55,29 @@ let _bootstrapCache = undefined; // undefined = not yet loaded, null = file miss
 
 export const WorkingAgreementsPlugin = async ({ directory }) => {
   const homeDir = os.homedir();
-  const skillsDir = path.resolve(__dirname, '../../skills');
   const envConfigDir = normalizePath(process.env.OPENCODE_CONFIG_DIR, homeDir);
-  const configDir = envConfigDir || path.join(homeDir, '.config/opencode');
+
+  // Resolve the skills directory for both install styles:
+  //  - git-backed plugin spec: skills live next to the repo (../../skills)
+  //  - plugin file copied to the global plugins dir: skills live in ~/.agents/skills
+  const repoSkillsDir = path.resolve(__dirname, '../../skills');
+  const homeSkillsDir = path.join(homeDir, '.agents', 'skills');
+  const skillsDirs = [repoSkillsDir, homeSkillsDir].filter((dir) => fs.existsSync(dir));
 
   // Helper to generate bootstrap content (cached after first call)
   const getBootstrapContent = () => {
     if (_bootstrapCache !== undefined) return _bootstrapCache;
 
     // Try to load the using-working-agreements skill
-    const skillPath = path.join(skillsDir, 'using-working-agreements', 'SKILL.md');
-    if (!fs.existsSync(skillPath)) {
+    let skillPath = null;
+    for (const dir of skillsDirs) {
+      const candidate = path.join(dir, 'using-working-agreements', 'SKILL.md');
+      if (fs.existsSync(candidate)) {
+        skillPath = candidate;
+        break;
+      }
+    }
+    if (!skillPath) {
       _bootstrapCache = null;
       return null;
     }
@@ -101,13 +113,16 @@ ${toolMapping}
   };
 
   return {
-    // Register the repo's skills directory so opencode discovers the skills
+    // Register the resolved skills directory so opencode discovers the skills
     // without manual symlinks or config file edits.
     config: async (config) => {
+      if (!skillsDirs.length) return;
       config.skills = config.skills || {};
       config.skills.paths = config.skills.paths || [];
-      if (!config.skills.paths.includes(skillsDir)) {
-        config.skills.paths.push(skillsDir);
+      for (const dir of skillsDirs) {
+        if (!config.skills.paths.includes(dir)) {
+          config.skills.paths.push(dir);
+        }
       }
     },
 

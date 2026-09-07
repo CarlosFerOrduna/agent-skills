@@ -44,26 +44,39 @@ session automatically, install the plugin for your harness:
 
 ### opencode
 
-Add the plugin to `opencode.json`:
+Recommended on Windows: copy the plugin to the global plugins directory
+(auto-discovered, no config edit):
+
+```powershell
+Copy-Item .opencode\plugins\working-agreements.js "$HOME\.config\opencode\plugins\"
+```
+
+Alternatively, add the git-backed spec to `opencode.json`:
 
 ```json
 {
-  "plugin": ["git+https://github.com/CarlosFerOrduna/agent-skills.git"]
+  "plugin": ["working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"]
 }
 ```
 
-See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for details.
+See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for details and troubleshooting.
 
 ### Claude Code
 
-Add the plugin via the CLI:
+Add the marketplace and install the plugin (the repo is both the marketplace
+and the plugin - the marketplace name is `agent-standards`):
 
 ```bash
 /plugin marketplace add https://github.com/CarlosFerOrduna/agent-skills
-/plugin install working-agreements
+/plugin install working-agreements@agent-standards
 ```
 
-Or add it as a plugin in your `.claude/settings.json`.
+Same commands from the shell (non-interactive, user scope):
+
+```bash
+claude plugin marketplace add https://github.com/CarlosFerOrduna/agent-skills
+claude plugin install working-agreements@agent-standards
+```
 
 The plugin registers a `SessionStart` hook that injects the
 `using-working-agreements` bootstrap into every session (startup, `/clear`, and
