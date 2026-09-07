@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# SessionStart hook for the working-agreements plugin.
+# Injects the using-working-agreements bootstrap skill into the session context.
+
+set -euo pipefail
+
+# Determine plugin root directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Read using-working-agreements content
+bootstrap_content=$(cat "${PLUGIN_ROOT}/skills/using-working-agreements/SKILL.md" 2>&1 || echo "Error reading using-working-agreements skill")
+
+# Escape string for JSON embedding using bash parameter substitution.
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+bootstrap_escaped=$(escape_for_json "$bootstrap_content")
+session_context="<EXTREMELY_IMPORTANT>\nYou have working agreements to honor.\n\n**Below is the full content of your 'working-agreements:using-working-agreements' skill - your introduction to the project standards. For the full standards, use the 'Skill' tool to load 'working-agreements':**\n\n${bootstrap_escaped}\n</EXTREMELY_IMPORTANT>"
+
+# Output context injection as JSON.
+# Claude Code expects hookSpecificOutput.additionalContext (nested).
+# Other platforms may consume additionalContext (top-level).
+if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
+else
+  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context" | cat
+fi
+
+exit 0
