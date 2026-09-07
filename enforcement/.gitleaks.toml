@@ -1,0 +1,21 @@
+# Base gitleaks configuration for the working-agreements security rules.
+# Detects secrets before they reach the repo. Copy into the consuming project
+# and adapt allowlists to that repo.
+#
+# Docs: https://github.com/gitleaks/gitleaks
+
+title = "gitleaks config"
+
+[extend]
+useDefault = true
+
+# NOTE: `.env` files themselves are kept out of git with .gitignore - gitleaks
+# rules detect secrets inside committed files, so there is nothing to add here
+# for env files. App-specific exceptions go below, and must only reference
+# fixture/test values, never real credentials.
+
+[allowlist]
+paths = [
+  # Example only - remove or extend per repo.
+  "**/*.example",
+]

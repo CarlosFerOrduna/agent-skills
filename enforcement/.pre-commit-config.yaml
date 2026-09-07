@@ -1,0 +1,21 @@
+# Base pre-commit wiring for the working-agreements enforcement tools
+# (framework: https://pre-commit.com). Copy into the consuming project and run
+# `pre-commit install`.
+#
+# Additional hooks on top of the base skeleton:
+#   - gitleaks: secret detection before anything reaches a commit.
+#   - commitlint: not wired here because it needs the commit message; use the
+#     husky `.git/hooks/commit-msg` snippet from enforcement/README.md instead.
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
