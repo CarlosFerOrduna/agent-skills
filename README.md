@@ -44,19 +44,21 @@ session automatically, install the plugin for your harness:
 
 ### opencode
 
-Recommended on Windows: copy the plugin to the global plugins directory
-(auto-discovered, no config edit):
-
-```powershell
-Copy-Item .opencode\plugins\working-agreements.js "$HOME\.config\opencode\plugins\"
-```
-
-Alternatively, add the git-backed spec to `opencode.json`:
+Recommended: add the git-backed spec to `opencode.json`:
 
 ```json
 {
   "plugin": ["working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"]
 }
+```
+
+The repo ships a `package.json`, so the plugin and its skills are installed
+automatically on first startup.
+
+Alternative: copy the plugin to the global plugins directory (auto-discovered):
+
+```powershell
+Copy-Item .opencode\plugins\working-agreements.js "$HOME\.config\opencode\plugins\"
 ```
 
 See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for details and troubleshooting.
@@ -88,6 +90,7 @@ on Windows and Unix without extra dependencies.
 ```
 .
 ├── install.py                   # copies ./skills to ~/.agents/skills/
+├── package.json                 # npm metadata; required for git-backed plugin install
 ├── .claude-plugin/
 │   └── plugin.json              # Claude Code plugin manifest
 ├── hooks/

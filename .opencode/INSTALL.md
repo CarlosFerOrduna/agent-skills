@@ -13,7 +13,32 @@ The plugin resolves the skills directory from both locations automatically:
 
 ## Install
 
-### Option A: global plugin file (recommended on Windows)
+### Option A: git-backed plugin spec (recommended)
+
+opencode's plugin manager installs the repo as a npm-style package fetched over
+git. The repo ships a `package.json` pointing at the plugin entrypoint, so the
+install resolves the bootstrap and the `skills/` directory automatically. Works
+on Windows and Unix.
+
+Add the plugin to your `opencode.json` (global at
+`~/.config/opencode/opencode.json` on Linux/macOS,
+`%USERPROFILE%\.config\opencode\opencode.json` on Windows, or project-level):
+
+```json
+{
+  "plugin": [
+    "working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"
+  ]
+}
+```
+
+The plugin and its skills are installed into opencode's package cache on first
+startup - `install.py` is not required for this install style.
+
+Restart opencode after editing the config - configuration is loaded once at
+startup.
+
+### Option B: global plugin file (fallback)
 
 Copy the plugin into opencode's global plugins directory (auto-discovered at
 startup, no config edit needed):
@@ -33,27 +58,6 @@ Copy-Item .opencode\plugins\working-agreements.js "$HOME\.config\opencode\plugin
 The plugin reads the bootstrap from `~/.agents/skills/`, so run
 `python install.py` first (or copy the skills folders manually). To update,
 copy the plugin file again after pulling the latest commit.
-
-### Option B: git-backed plugin spec
-
-Add the plugin to your `opencode.json` (global at
-`~/.config/opencode/opencode.json` on Linux/macOS,
-`%USERPROFILE%\.config\opencode\opencode.json` on Windows, or project-level):
-
-```json
-{
-  "plugin": [
-    "working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"
-  ]
-}
-```
-
-Note: git-backed specs are not documented in opencode's official plugin docs,
-and some Windows builds have upstream installer issues with them. If the plugin
-does not load, fall back to Option A.
-
-Restart opencode after editing the config - configuration is loaded once at
-startup.
 
 ## Usage
 
