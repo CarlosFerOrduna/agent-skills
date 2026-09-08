@@ -1,6 +1,6 @@
 ---
 name: typeorm
-version: 0.5.0
+version: 0.5.1
 description: TypeORM entity, relation, repository, query, and configuration conventions shared across engines. Load when designing entities, relations, queries, or TypeORM setup; load the matching per-engine skill alongside it.
 ---
 
@@ -8,9 +8,10 @@ description: TypeORM entity, relation, repository, query, and configuration conv
 
 Portable TypeORM mapping and API conventions. Engine-specific decisions
 (identifiers, primary keys, logical-column types, index syntax) live in
-dedicated per-engine skills (`typeorm-mssql`, `typeorm-pg`); load the one that
-matches the project's database. Add a new per-engine skill the day a project
-runs on that engine.
+dedicated per-engine skills; load the one that matches the project's database,
+determined by the `type:` field of its TypeORM DataSource (`mssql` →
+`typeorm-mssql`, `postgres` → `typeorm-pg`). Add a new per-engine skill the day
+a project runs on that engine.
 
 ## Entities
 

@@ -1,6 +1,6 @@
 ---
 name: typeorm-pg
-version: 0.5.0
+version: 0.5.1
 description: Postgres-specific TypeORM conventions - snake_case identifiers (no forced quoting), uuid primary keys, timestamptz UTC timestamps, boolean soft delete, and partial indexes. Load alongside typeorm for Postgres projects.
 ---
 
@@ -18,7 +18,7 @@ live in the `typeorm` skill.
 
 ## Primary keys
 
-- `uuid` with a database default: `@PrimaryGeneratedColumn('uuid')` plus `default: () => 'gen_random_uuid()'` when the migration column carries it.
+- `uuid` with a mandatory database default: `@PrimaryGeneratedColumn('uuid')` on the entity and `DEFAULT gen_random_uuid()` in the migration column. Postgres has no application-side uuid generation, so without the `DEFAULT` an insert hits the NOT NULL. `gen_random_uuid()` is built in since PG 13; on older servers enable the `pgcrypto` extension first.
 
 ## Logical columns
 
