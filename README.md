@@ -1,6 +1,8 @@
 # Agent Skills
 
-Editor-agnostic agent skills (SKILL.md) that follow the AGENTS.md / SKILL.md convention.
+One engineering contract for AI coding agents - editor-agnostic `SKILL.md` files
+that follow the AGENTS.md / SKILL.md convention, with machine-enforced rules
+where tooling can express them, distributed to whatever harness the team runs.
 
 Installed skills live in the user-level `~/.agents/skills/` directory, which is read by:
 
@@ -30,9 +32,15 @@ dependencies):
 ```bash
 python install.py            # skip existing skills
 python install.py --force    # replace existing skills
+python install.py --prune    # also remove skills no longer shipped
 ```
 
 This copies every skill in `skills/` to `~/.agents/skills/`.
+
+`--prune` removes directories recorded by a previous install that no longer
+exist in `skills/`, plus the legacy `using-working-agreements` bootstrap from
+pre-0.2.0 installs. It never deletes skills it did not install, so foreign
+directories in `~/.agents/skills/` (for example `commit-message`) are kept.
 
 ### Manual (any platform)
 
@@ -128,9 +136,12 @@ npm run check
 - `check:commitlint` runs `scripts/smoke-commitlint.mjs`, which exercises the 5
   commitlint cases (valid, missing gitmoji, invalid type, over-72 header,
   breaking) against a scratch repo.
-- `check:skills` runs `scripts/check-skills.py`, which fails on drift: skill
-  frontmatter (name/version/description) vs. `package.json`, the contract stack
-  index vs. the actual `skills/` dirs, README mentions, and stale references.
+- `check:skills` runs `scripts/check-skills.mjs` (Node only, no Python
+  required), which fails on drift: skill frontmatter
+  (name/version/description) vs. `package.json`, the Claude manifests
+  (`plugin.json` / `marketplace.json`) versions, the contract stack index vs.
+  the actual `skills/` dirs, README mentions, and stale references in the
+  runtime surfaces.
 
 Use `npm run check` rather than `pnpm check`: this repository ships no
 dependencies, and pnpm's script runner runs an implicit install first, which
@@ -140,7 +151,7 @@ drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo.
 
 ```
 .
-├── install.py                   # copies ./skills to ~/.agents/skills/
+├── install.py                   # copies ./skills to ~/.agents/skills/ (--force, --prune)
 ├── package.json                 # npm metadata; required for git-backed plugin install
 ├── LICENSE                      # MIT
 ├── enforcement/
@@ -162,7 +173,7 @@ drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo.
 │       └── working-agreements.js  # opencode plugin (bootstraps + registers skills)
 ├── scripts/
 │   ├── smoke-commitlint.mjs     # runs the 5 commitlint cases against a scratch repo
-│   └── check-skills.py          # validates frontmatter, versions, index, README
+│   └── check-skills.mjs         # validates frontmatter, versions, index, README
 ├── skills/
 │   ├── working-agreements/      # always-on contract (injected) + stack index
 │   ├── commit-conventions/      # Conventional Commits + gitmoji

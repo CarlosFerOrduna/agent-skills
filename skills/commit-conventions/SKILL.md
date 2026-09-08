@@ -1,6 +1,6 @@
 ---
 name: commit-conventions
-version: 0.2.0
+version: 0.3.0
 description: Conventional Commits with a leading gitmoji - valid types, scope derived from file paths, header at most 72 characters excluding the emoji, subject/body/breaking-changes rules. Load when writing, reviewing, or generating a commit message.
 ---
 

@@ -1,18 +1,21 @@
 ---
 name: working-agreements
-version: 0.2.0
+version: 0.3.0
 description: Always-on engineering contract for this project - language rules, security, architecture, package manager, timestamps, logging, and agent workflow, plus an index of the stack skills. Load at the start of any coding, review, or commit task; load the relevant stack skill on demand.
 ---
 
-<SUBAGENT-STOP>
-If you were dispatched as a subagent to execute a specific task and already have the working agreements loaded, ignore this skill.
-</SUBAGENT-STOP>
-
 # Working Agreements
 
-The always-on engineering contract. The harness injects this file at the start
-of every session (startup, `/clear`, and compaction). It stays small on
-purpose: the details live in stack-specific skills that load on demand.
+The always-on engineering contract. When the harness wrapper is installed
+(Claude Code plugin or opencode plugin), this file is injected at the start of
+every session (startup, `/clear`, and compaction); on a bare `~/.agents/skills`
+install, load it with the `skill` tool or read it directly from disk. It stays
+small on purpose: the details live in stack-specific skills that load on
+demand.
+
+This contract states the default rules for the repo(s) it governs. A project
+layer (project-level skill or `AGENTS.md`) may tighten them, and an explicit
+user instruction always wins.
 
 If a rule conflicts with an explicit user instruction, the user instruction
 wins.
@@ -37,8 +40,9 @@ wins.
 
 ## Architecture
 
-- The project follows a **microservices** architecture with explicit service
-  boundaries; avoid unnecessary coupling.
+- The default assumption is a **microservices** architecture with explicit
+  service boundaries; avoid unnecessary coupling. A project may override this
+  layer.
 - Prefer the smallest simple solution that satisfies the requirement. Reviews
   should push toward simplicity, not ceremony.
 
@@ -78,6 +82,6 @@ and apply them as if they were a direct project instruction:
 
 ## Contract version
 
-This contract is **v0.2.0**. When you need to know or report the version of the
+This contract is **v0.3.0**. When you need to know or report the version of the
 standards in effect (for example, when collaborators on different installs
 produce divergent commits), state it.
