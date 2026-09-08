@@ -119,11 +119,13 @@ for (const dir of runtimeDirs) {
 // The .editorconfig requires a final newline on every text file; enforce the
 // whole class (not just SKILL.md) over the tracked files only, so local
 // residue such as node_modules or generated lockfiles cannot break the gate.
-const tracked = spawnSync('git', ['ls-files', '-z'], { encoding: 'utf8' });
+const tracked = spawnSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' });
 if (tracked.status !== 0) fail('git ls-files failed');
+
 for (const rel of tracked.stdout.split('\0').filter((entry) => entry)) {
   const contents = fs.readFileSync(path.join(root, rel), 'utf8');
   if (contents.slice(0, 8192).includes('\0')) continue; // binary
+
   if (!contents.endsWith('\n')) {
     fail(`${rel} must end with a final newline (.editorconfig)`);
   }
