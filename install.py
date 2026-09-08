@@ -155,6 +155,7 @@ def main() -> int:
         prune(previous, current)
 
     owned: set[str] = set()
+    skipped_foreign: list[str] = []
     for skill in skills:
         dest = DEST_ROOT / skill.name
         if not dest.exists():
@@ -194,8 +195,15 @@ def main() -> int:
             owned.add(skill.name)
         else:
             print(f"SKIP '{skill.name}' -> {dest} (not tracked by this installer; use --force to replace)")
+            skipped_foreign.append(skill.name)
 
     write_manifest(owned)
+
+    if skipped_foreign:
+        skipped = ", ".join(f"'{name}'" for name in skipped_foreign)
+        count = len(skipped_foreign)
+        noun = "skill" if count == 1 else "skills"
+        print(f"{count} {noun} skipped (foreign: {skipped}); run --force to replace")
 
     print()
     print(f"Done. Skills installed to {DEST_ROOT}")
