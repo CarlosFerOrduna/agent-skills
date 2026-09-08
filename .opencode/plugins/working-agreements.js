@@ -143,8 +143,10 @@ ${toolMapping}
     // without manual symlinks or config file edits.
     config: async (config) => {
       if (!skillsDirs.length) return;
+
       config.skills = config.skills || {};
       config.skills.paths = config.skills.paths || [];
+
       for (const dir of skillsDirs) {
         if (!config.skills.paths.includes(dir)) {
           config.skills.paths.push(dir);
