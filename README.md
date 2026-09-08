@@ -42,8 +42,11 @@ This copies every skill in `skills/` to `~/.agents/skills/`.
 
 Installership is tracked in `.agent-skills.json`: a directory the installer
 recorded as its own is upgraded in place (an `UPDATE 'name' old -> new` line is
-printed when the version differs), while foreign directories — something it
-never installed — are skipped unless `--force` is passed.
+printed when the version differs). Directories installed before the manifest
+existed are adopted on first run (an `ADOPT 'name' (version)` line; the `name:`
+in their SKILL.md marks them as ours), so upgrading from a pre-manifest install
+needs no flag. Foreign directories — something this installer never installed —
+are skipped unless `--force` is passed.
 
 `--prune` removes owned directories that no longer exist in `skills/`, plus the
 legacy `using-working-agreements` bootstrap from pre-0.2.0 installs. It never
