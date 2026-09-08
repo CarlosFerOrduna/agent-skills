@@ -8,18 +8,27 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const scratch = mkdtempSync(path.join(os.tmpdir(), "smoke-commitlint-"));
 const configSrc = path.join(root, "enforcement", "commitlint.config.cjs");
 
-const pm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+const pm = process.platform === "win32" ? "npm.cmd" : "npm";
 
 function run(command) {
-  const result = spawnSync(command, { cwd: scratch, shell: true });
+  // INIT_CWD must be pinned to the scratch: under `npm run check` npm exports
+  // it as the hosting repository, and child npm processes would otherwise walk
+  // up to it and pollute the repo with a lockfile or node_modules.
+  const result = spawnSync(command, {
+    cwd: scratch,
+    shell: true,
+    env: { ...process.env, INIT_CWD: scratch },
+  });
   return result.status;
 }
 
 let failures = 0;
 
 try {
-  // Give the scratch its own package root so pnpm/commitlint never walk up to
-  // the hosting repository (which would pollute it with a lockfile).
+  // The scratch gets its own package root so npm never walks up to the hosting
+  // repository (which would pollute it with a lockfile or node_modules). npm is
+  // used deliberately: `npm run check` already requires the npm toolchain, so
+  // the smoke works on any machine that can run the gate.
   writeFileSync(
     path.join(scratch, "package.json"),
     '{"name":"smoke-commitlint","private":true}\n',
@@ -32,13 +41,17 @@ try {
     `${pm} add -D @commitlint/cli @commitlint/config-conventional`,
   );
   if (setup !== 0) {
-    console.error(`setup failed (${pm} add exit=${setup})`);
+    console.error(
+      `setup failed installing @commitlint in the scratch dir (${pm} add exit=${setup})`,
+    );
     process.exit(2);
   }
 
   function runCase(name, want, header) {
     writeFileSync(path.join(scratch, "msg.txt"), `${header}\n`, "utf8");
-    const got = run(`${pm} exec commitlint --edit msg.txt`);
+    // The `--` separator is required under npm: without it npm swallows the
+    // commitlint `--edit` flag (expanding it to npm's own `--editor`).
+    const got = run(`${pm} exec -- commitlint --edit msg.txt`);
     if (got === want) {
       console.log(`PASS ${name} (exit=${got})`);
     } else {
