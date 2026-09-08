@@ -22,6 +22,7 @@ session only pays for the context it needs (progressive disclosure).
 | `commit-conventions` | on-demand | Conventional Commits with a leading gitmoji: valid types, scopes from paths, header ≤ 72 excluding the emoji, body and breaking-changes rules.                                                                      |
 | `nestjs-code-style`  | on-demand | TypeScript / NestJS style: symbol/directory/file naming with responsibility suffixes, imports, types, constants, enums, and repository intent.                                                                      |
 | `database`           | on-demand | Versioned SQL migrations and ORM schema discipline: migration files as the source of truth, ORM never mutates the schema.                                                                                           |
+| `typeorm`            | on-demand | TypeORM entity, relation, repository, and configuration conventions: explicit columns and names, engine-aware primary keys, manual logical columns, direct repository injection.                                    |
 | `testing-standards`  | on-demand | Jest, unit tests alongside code, integration tests in `test/`, ephemeral tests removed when done.                                                                                                                   |
 
 ## Install the skills
@@ -48,7 +49,7 @@ Copy each `skills/<name>/` folder into `~/.agents/skills/`:
 
 ```bash
 cp -r skills/working-agreements skills/commit-conventions \
-      skills/nestjs-code-style skills/database \
+      skills/nestjs-code-style skills/database skills/typeorm \
       skills/testing-standards ~/.agents/skills/
 ```
 
@@ -65,9 +66,7 @@ Recommended: add the git-backed spec to `opencode.json`:
 
 ```json
 {
-  "plugin": [
-    "working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"
-  ]
+  "plugin": ["working-agreements@git+https://github.com/CarlosFerOrduna/agent-skills.git"]
 }
 ```
 
@@ -179,6 +178,7 @@ drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo.
 │   ├── commit-conventions/      # Conventional Commits + gitmoji
 │   ├── nestjs-code-style/       # TS/NestJS style, naming, repositories
 │   ├── database/                # migrations + ORM schema discipline
+│   ├── typeorm/                 # TypeORM entities, repositories, config
 │   └── testing-standards/       # Jest, test layout
 └── README.md
 ```
