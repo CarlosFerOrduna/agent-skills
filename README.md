@@ -22,7 +22,9 @@ session only pays for the context it needs (progressive disclosure).
 | `commit-conventions` | on-demand | Conventional Commits with a leading gitmoji: valid types, scopes from paths, header ≤ 72 excluding the emoji, body and breaking-changes rules.                                                                      |
 | `nestjs-code-style`  | on-demand | TypeScript / NestJS style: symbol/directory/file naming with responsibility suffixes, imports, types, constants, enums, and repository intent.                                                                      |
 | `database`           | on-demand | Versioned SQL migrations and ORM schema discipline: migration files as the source of truth, ORM never mutates the schema.                                                                                           |
-| `typeorm`            | on-demand | TypeORM entity, relation, repository, and configuration conventions: explicit columns and names, engine-aware primary keys, manual logical columns, repository layers or direct injection.                         |
+| `typeorm`            | on-demand | Portable TypeORM mapping and API conventions: explicit columns and names, relations, repositories, queries, `synchronize: false`. Engine decisions live in the per-engine skills below. |
+| `typeorm-mssql`      | on-demand | MSSQL TypeORM conventions: camelCase identifiers, `int` identity keys, `getutcdate()` timestamps, `bit` soft delete, filtered unique indexes. |
+| `typeorm-pg`         | on-demand | Postgres TypeORM conventions: snake_case identifiers (no forced quoting), `uuid` keys, `timestamptz` UTC timestamps, `boolean` soft delete, partial indexes. |
 | `testing-standards`  | on-demand | Jest, unit tests alongside code, integration tests in `test/`, ephemeral tests removed when done.                                                                                                                   |
 
 ## Install the skills
@@ -31,17 +33,22 @@ The skills can be installed with the cross-platform installer (Python 3, no
 dependencies):
 
 ```bash
-python install.py            # skip existing skills
-python install.py --force    # replace existing skills
-python install.py --prune    # also remove skills no longer shipped
+python install.py            # install new and upgrade owned skills, skip foreign
+python install.py --force    # also replace foreign skill directories
+python install.py --prune    # also remove owned skills no longer shipped
 ```
 
 This copies every skill in `skills/` to `~/.agents/skills/`.
 
-`--prune` removes directories recorded by a previous install that no longer
-exist in `skills/`, plus the legacy `using-working-agreements` bootstrap from
-pre-0.2.0 installs. It never deletes skills it did not install, so foreign
-directories in `~/.agents/skills/` (for example `commit-message`) are kept.
+Installership is tracked in `.agent-skills.json`: a directory the installer
+recorded as its own is upgraded in place (an `UPDATE 'name' old -> new` line is
+printed when the version differs), while foreign directories — something it
+never installed — are skipped unless `--force` is passed.
+
+`--prune` removes owned directories that no longer exist in `skills/`, plus the
+legacy `using-working-agreements` bootstrap from pre-0.2.0 installs. It never
+deletes skills it did not install, so foreign directories in `~/.agents/skills/`
+(for example `commit-message`) are kept.
 
 ### Manual (any platform)
 
@@ -49,7 +56,8 @@ Copy each `skills/<name>/` folder into `~/.agents/skills/`:
 
 ```bash
 cp -r skills/working-agreements skills/commit-conventions \
-      skills/nestjs-code-style skills/database skills/typeorm \
+      skills/nestjs-code-style skills/database \
+      skills/typeorm skills/typeorm-mssql skills/typeorm-pg \
       skills/testing-standards ~/.agents/skills/
 ```
 
@@ -132,9 +140,9 @@ required):
 npm run check
 ```
 
-- `check:commitlint` runs `scripts/smoke-commitlint.mjs`, which exercises the 5
-  commitlint cases (valid, missing gitmoji, invalid type, over-72 header,
-  breaking) against a scratch repo.
+- `check:commitlint` runs `scripts/smoke-commitlint.mjs`, which exercises the 6
+  commitlint cases (valid, missing gitmoji, invalid type, multiple gitmojis,
+  over-72 header, breaking) against a scratch repo.
 - `check:skills` runs `scripts/check-skills.mjs` (Node only, no Python
   required), which fails on drift: skill frontmatter
   (name/version/description) vs. `package.json`, the Claude manifests
@@ -142,15 +150,18 @@ npm run check
   the actual `skills/` dirs, README mentions, and stale references in the
   runtime surfaces.
 
-Use `npm run check` rather than `pnpm check`: this repository ships no
+Use `npm run check` rather than `pnpm check`: the repository ships no
 dependencies, and pnpm's script runner runs an implicit install first, which
-drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo.
+drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo. The gate runs
+on a bare Node install: `check:commitlint` provisions `@commitlint/cli` inside
+a temporary scratch directory, so the repo itself keeps no `node_modules` and
+no lockfile in sync.
 
 ## Anatomy
 
 ```
 .
-├── install.py                   # copies ./skills to ~/.agents/skills/ (--force, --prune)
+├── install.py                   # copies ./skills to ~/.agents/skills/ (--prune, manifest-tracked)
 ├── package.json                 # npm metadata; required for git-backed plugin install
 ├── LICENSE                      # MIT
 ├── enforcement/
@@ -178,7 +189,9 @@ drops a stray `node_modules/` and `pnpm-lock.yaml` into the repo.
 │   ├── commit-conventions/      # Conventional Commits + gitmoji
 │   ├── nestjs-code-style/       # TS/NestJS style, naming, repositories
 │   ├── database/                # migrations + ORM schema discipline
-│   ├── typeorm/                 # TypeORM entities, repositories, config
+│   ├── typeorm/                 # TypeORM portable conventions (entities, repositories, config)
+│   ├── typeorm-mssql/           # TypeORM for SQL Server (identifiers, keys, indexes)
+│   ├── typeorm-pg/              # TypeORM for Postgres (identifiers, keys, indexes)
 │   └── testing-standards/       # Jest, test layout
 └── README.md
 ```
