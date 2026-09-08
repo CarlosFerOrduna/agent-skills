@@ -1,6 +1,6 @@
 {
   "name": "working-agreements",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Working-agreements engineering standards skills for Claude Code and opencode",
   "type": "module",
   "main": ".opencode/plugins/working-agreements.js",
@@ -14,9 +14,5 @@
     "skills",
     "engineering-standards",
     "conventions"
-  ],
-  "devDependencies": {
-    "@commitlint/cli": "^21.2.2",
-    "@commitlint/config-conventional": "^21.2.2"
-  }
+  ]
 }
