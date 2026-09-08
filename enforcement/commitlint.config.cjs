@@ -30,10 +30,11 @@ const VALID_TYPES = [
   "revert",
 ];
 
-// One or more emoji at the start of the header (with possible variation
-// selectors and whitespace). Only the FIRST variant selector is consumed so the
-// regex stays permissive with sequences like ⚡️ or 🚀.
-const EMOJI_RE = /^(\p{Extended_Pictographic}\uFE0F?\s*)+/u;
+// Exactly one emoji at the start of the header (with possible variation
+// selector and whitespace). A single pictographic keeps the leading-gitmoji
+// and length rules honest: repeated emoji like ✨✨✨ do not slip through and
+// do not get stripped from the 72-character count.
+const EMOJI_RE = /^\p{Extended_Pictographic}\uFE0F?\s*/u;
 
 const withoutEmoji = (input) => input.replace(EMOJI_RE, "");
 
