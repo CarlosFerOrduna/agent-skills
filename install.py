@@ -6,9 +6,12 @@ Copies every skill in ./skills to the user's global skills directory
 tools following the AGENTS.md / SKILL.md convention.
 
 Ownership is tracked in a manifest (`.agent-skills.json`) so upgrades work
-instead of a blind skip: directories this installer recorded as its own are
-replaced (with an `UPDATE 'name' old -> new` line when the version differs),
-while foreign skill directories are left alone unless `--force` is passed.
+instead of a blind skip. Directories this installer recorded as its own are
+replaced (an `UPDATE 'name' old -> new` line is printed when the version
+differs). Directories installed before the manifest existed are adopted on
+first run: an untracked directory whose SKILL.md `name:` matches a shipped
+skill was placed by an old installer, so it is treated as owned. Foreign skill
+directories are left alone unless `--force` is passed.
 
 Usage:
     python install.py                # install new skills, upgrade owned ones,
@@ -26,7 +29,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import shutil
 import sys
 from pathlib import Path
@@ -36,8 +38,6 @@ SOURCE_DIR = REPO_ROOT / "skills"
 DEST_ROOT = Path.home() / ".agents" / "skills"
 MANIFEST = ".agent-skills.json"
 LEGACY = ("using-working-agreements",)
-
-VERSION_RE = re.compile(r"^version\s*:\s*([0-9][0-9a-zA-Z.-]*)\s*$", re.MULTILINE)
 
 
 def parse_args() -> argparse.Namespace:
@@ -76,8 +76,8 @@ def write_manifest(skills: set[str]) -> None:
     )
 
 
-def skill_version(directory: Path) -> str:
-    """Read the `version:` field from a skill's SKILL.md frontmatter."""
+def frontmatter_field(directory: Path, field: str) -> str:
+    """Read `name:`/`version:` from a skill's SKILL.md frontmatter."""
     skill_file = directory / "SKILL.md"
     if not skill_file.is_file():
         return "?"
@@ -85,8 +85,25 @@ def skill_version(directory: Path) -> str:
         text = skill_file.read_text(encoding="utf-8")[:4096]
     except OSError:
         return "?"
-    match = VERSION_RE.search(text)
-    return match.group(1) if match else "?"
+    for line in text.splitlines()[:20]:
+        key, _, value = line.partition(":")
+        if key.strip() == field:
+            return value.strip()
+    return "?"
+
+
+def skill_name(skill: Path) -> str:
+    return frontmatter_field(skill, "name")
+
+
+def skill_version(skill: Path) -> str:
+    return frontmatter_field(skill, "version") or "?"
+
+
+def replace(skill: Path, dest: Path) -> None:
+    if dest.exists():
+        shutil.rmtree(dest)
+    shutil.copytree(skill, dest)
 
 
 def prune(previous: set[str], current: set[str]) -> None:
@@ -128,20 +145,29 @@ def main() -> int:
             print(f"INSTALL '{skill.name}' -> {dest}")
             shutil.copytree(skill, dest)
             owned.add(skill.name)
-        elif skill.name in previous:
+            continue
+
+        owned_target = skill.name in previous
+        if not owned_target:
+            # Adoption: an untracked directory whose frontmatter `name:`
+            # matches a shipped skill was placed by an installer that ran
+            # before the manifest existed. It is ours, not foreign.
+            if skill_name(dest) == skill.name:
+                owned_target = True
+                print(f"ADOPT '{skill.name}' ({skill_version(dest)})")
+
+        if owned_target:
             dest_version = skill_version(dest)
             source_version = skill_version(skill)
             if dest_version != source_version:
-                print(f"UPDATE '{skill.name}' {dest_version} -> {source_version} -> {dest}")
-                shutil.rmtree(dest)
-                shutil.copytree(skill, dest)
+                print(f"UPDATE '{skill.name}' {dest_version} -> {source_version} ({dest})")
+                replace(skill, dest)
             else:
                 print(f"OK '{skill.name}' (already at {source_version})")
             owned.add(skill.name)
         elif args.force:
             print(f"REPLACE '{skill.name}' (foreign) -> {dest}")
-            shutil.rmtree(dest)
-            shutil.copytree(skill, dest)
+            replace(skill, dest)
             owned.add(skill.name)
         else:
             print(f"SKIP '{skill.name}' -> {dest} (not tracked by this installer; use --force to replace)")
