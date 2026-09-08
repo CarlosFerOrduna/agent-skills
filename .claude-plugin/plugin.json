@@ -1,18 +1,12 @@
 {
   "name": "working-agreements",
   "description": "Injects the working-agreements engineering standards into every Claude Code session at startup.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": {
     "name": "Fernando Orduna"
   },
   "homepage": "https://github.com/CarlosFerOrduna/agent-skills",
   "repository": "https://github.com/CarlosFerOrduna/agent-skills",
   "license": "MIT",
-  "keywords": [
-    "skills",
-    "standards",
-    "conventions",
-    "best-practices",
-    "workflows"
-  ]
+  "keywords": ["skills", "standards", "conventions", "best-practices", "workflows"]
 }

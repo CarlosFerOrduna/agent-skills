@@ -1,6 +1,6 @@
 ---
 name: database
-version: 0.3.1
+version: 0.4.0
 description: Database schema and migration conventions. Load when touching database schema, migrations, or ORM configuration.
 ---
 
