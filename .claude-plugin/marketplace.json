@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/claude-plugin-marketplace.json",
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
   "name": "agent-standards",
   "owner": {
     "name": "Fernando Orduna"
