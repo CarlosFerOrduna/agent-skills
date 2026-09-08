@@ -1,6 +1,6 @@
 ---
 name: database
-version: 0.4.2
+version: 0.5.0
 description: Database schema and migration conventions. Load when touching database schema, migrations, or ORM configuration.
 ---
 
@@ -14,10 +14,10 @@ description: Database schema and migration conventions. Load when touching datab
 
 ## Naming
 
-- Table names are **singular** and **camelCase**, matching the entity or class they map (e.g. `userProfile`, not `user_profiles`).
-- Column names are **camelCase**, matching the mapped property name.
-- Where the domain allows it, prefer logical columns for state that must survive (soft-delete flags, audit timestamps such as `createdAt`, `updatedAt`, `deletedAt`) over destructive changes.
-- Anything outside this default (e.g. a name that requires quoting or collides with a reserved word) is explicit in the migration SQL.
+- Table names are **singular** and follow the engine's identifier style: **camelCase on MSSQL** (`userProfile`, quoting is never forced), **snake_case on Postgres** (`user_profile`, unquoted identifiers fold to lowercase so quoting is never forced).
+- Column names follow the same engine style and always map to the camelCase property they represent.
+- Where the domain allows it, prefer logical columns for state that must survive (soft-delete flags, audit timestamps such as `createdAt`/`created_at`, `updatedAt`/`updated_at`) over destructive changes.
+- Anything outside this default is explicit in the migration SQL: on MSSQL a name that requires quoting or collides with a reserved word; on Postgres any name that is not snake_case (it becomes mandatory-quoted).
 
 ## ORM
 

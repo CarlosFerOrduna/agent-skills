@@ -1,6 +1,6 @@
 ---
 name: working-agreements
-version: 0.4.2
+version: 0.5.0
 description: Always-on engineering contract for this project - language rules, security, architecture, package manager, timestamps, logging, and agent workflow, plus an index of the stack skills. Load at the start of any coding, review, or commit task; load the relevant stack skill on demand.
 ---
 
@@ -14,11 +14,8 @@ small on purpose: the details live in stack-specific skills that load on
 demand.
 
 This contract states the default rules for the repo(s) it governs. A project
-layer (project-level skill or `AGENTS.md`) may tighten them, and an explicit
-user instruction always wins.
-
-If a rule conflicts with an explicit user instruction, the user instruction
-wins.
+layer (project-level skill or `AGENTS.md`) may tighten them; if a rule
+conflicts with an explicit user instruction, the user instruction wins.
 
 ## Language
 
@@ -80,11 +77,13 @@ and apply them as if they were a direct project instruction:
 - `commit-conventions` — Conventional Commits with a leading gitmoji.
 - `nestjs-code-style` — TypeScript / NestJS style, naming, types, repositories.
 - `database` — versioned SQL migrations and ORM schema discipline.
-- `typeorm` — TypeORM entity, relation, repository, and configuration conventions.
+- `typeorm` — TypeORM entity, relation, repository, query, and configuration conventions.
+- `typeorm-mssql` — MSSQL-specific TypeORM conventions (identifiers, keys, filtered indexes).
+- `typeorm-pg` — Postgres-specific TypeORM conventions (identifiers, keys, partial indexes).
 - `testing-standards` — Jest, unit and integration test layout.
 
 ## Contract version
 
-This contract is **v0.4.2**. When you need to know or report the version of the
+This contract is **v0.5.0**. When you need to know or report the version of the
 standards in effect (for example, when collaborators on different installs
 produce divergent commits), state it.
