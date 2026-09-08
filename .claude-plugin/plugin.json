@@ -1,7 +1,7 @@
 {
   "name": "working-agreements",
   "description": "Injects the working-agreements engineering standards into every Claude Code session at startup.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": {
     "name": "Fernando Orduna"
   },
