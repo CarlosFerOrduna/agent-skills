@@ -1,6 +1,6 @@
 ---
 name: typeorm
-version: 0.4.0
+version: 0.4.1
 description: TypeORM entity, relation, repository, and configuration conventions. Load when designing entities, relations, queries, or TypeORM setup.
 ---
 
@@ -22,8 +22,9 @@ description: TypeORM entity, relation, repository, and configuration conventions
 ## Repositories
 
 - Register entities per feature module with `TypeOrmModule.forFeature([...])` and inject them directly: `@InjectRepository(Entity)`.
-- Write a custom repository only when there is real query logic. Extend `Repository<Entity>` with an explicit wiring constructor and expose intent-named methods (`findResumable`, `applyTerminal`) built on `find*` options or the query builder.
-- Do not build generic base-repository frameworks; refactor repeated statements, not the repository type.
+- A project may ship its own repository layer on top of TypeORM (base repositories or a query DSL). When it exists, use it where it expresses the requirement better or performs better than the vanilla API, and fall back to TypeORM directly where it does not fit. The two coexist per requirement.
+- These standards never prescribe a particular proprietary layer; follow whatever the project already runs and keep new repository code inside that layer's conventions when it has them.
+- Write a custom repository when there is real query logic. Extend `Repository<Entity>` with an explicit wiring constructor and expose intent-named methods (`findResumable`, `applyTerminal`) built on the project layer, `find*` options, or the query builder.
 
 ## Queries and transactions
 

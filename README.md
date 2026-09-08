@@ -22,7 +22,7 @@ session only pays for the context it needs (progressive disclosure).
 | `commit-conventions` | on-demand | Conventional Commits with a leading gitmoji: valid types, scopes from paths, header ≤ 72 excluding the emoji, body and breaking-changes rules.                                                                      |
 | `nestjs-code-style`  | on-demand | TypeScript / NestJS style: symbol/directory/file naming with responsibility suffixes, imports, types, constants, enums, and repository intent.                                                                      |
 | `database`           | on-demand | Versioned SQL migrations and ORM schema discipline: migration files as the source of truth, ORM never mutates the schema.                                                                                           |
-| `typeorm`            | on-demand | TypeORM entity, relation, repository, and configuration conventions: explicit columns and names, engine-aware primary keys, manual logical columns, direct repository injection.                                    |
+| `typeorm`            | on-demand | TypeORM entity, relation, repository, and configuration conventions: explicit columns and names, engine-aware primary keys, manual logical columns, repository layers or direct injection.                         |
 | `testing-standards`  | on-demand | Jest, unit tests alongside code, integration tests in `test/`, ephemeral tests removed when done.                                                                                                                   |
 
 ## Install the skills
