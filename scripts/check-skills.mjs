@@ -15,10 +15,13 @@
  *   - runtime surfaces (skills/, hooks/, .opencode/) have no stale references
  *     to the archived using-working-agreements bootstrap. Docs are excluded so
  *     migration notes and changelogs can mention the name.
+ *   - every tracked text file in the repo ends with a final newline
+ *     (.editorconfig), binaries excluded
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -113,6 +116,19 @@ for (const dir of runtimeDirs) {
   }
 }
 
+// The .editorconfig requires a final newline on every text file; enforce the
+// whole class (not just SKILL.md) over the tracked files only, so local
+// residue such as node_modules or generated lockfiles cannot break the gate.
+const tracked = spawnSync('git', ['ls-files', '-z'], { encoding: 'utf8' });
+if (tracked.status !== 0) fail('git ls-files failed');
+for (const rel of tracked.stdout.split('\0').filter((entry) => entry)) {
+  const contents = fs.readFileSync(path.join(root, rel), 'utf8');
+  if (contents.slice(0, 8192).includes('\0')) continue; // binary
+  if (!contents.endsWith('\n')) {
+    fail(`${rel} must end with a final newline (.editorconfig)`);
+  }
+}
+
 console.log(`PASS ${skills.length} skills, versions @ ${pkgVersion}, index and README in sync`);
 
 function walk(dir) {
@@ -121,6 +137,7 @@ function walk(dir) {
 
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
+    if (entry.name === '.git') continue;
 
     if (entry.isDirectory()) {
       results.push(...walk(full));
