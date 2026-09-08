@@ -30,13 +30,16 @@ module.exports = {
   extends: ['@commitlint/config-conventional'],
   parserPreset: {
     parserOpts: {
-      // Allow an optional leading gitmoji before `type(scope): subject`.
+      // Allow an optional leading gitmoji run before `type(scope): subject`.
       // Named groups make the correspondence explicit and resilient to the
       // parser's positional fallback (matches[i + 1]).
+      // The emoji group swallows a whole run of pictographs so repeated emoji
+      // like ✨✨✨ reach the rules (exactly-one-gitmoji) instead of crashing
+      // the stock parser into a `type may not be empty` report.
       // The type group accepts any word; `type-enum` then reports the invalid
       // value with a readable message instead of a parse failure.
       headerPattern:
-        /^(?<emoji>\p{Extended_Pictographic}\uFE0F?\s*)?(?<type>\w+)(?:\((?<scope>[^)]+)\))?!?: (?<subject>.*)$/u,
+        /^(?<emoji>(?:\p{Extended_Pictographic}\uFE0F?\s*)+)?(?<type>\w+)(?:\((?<scope>[^)]+)\))?!?: (?<subject>.*)$/u,
       headerCorrespondence: ['emoji', 'type', 'scope', 'subject'],
     },
   },
@@ -52,7 +55,9 @@ module.exports = {
       rules: {
         'header-leading-gitmoji': ({ header }) => {
           if (!header) return [true];
-          return [EMOJI_RE.test(header), 'header must start with a gitmoji'];
+          if (!EMOJI_RE.test(header)) return [false, 'header must start with a gitmoji'];
+          const rest = header.replace(EMOJI_RE, '');
+          return [!EMOJI_RE.test(rest), 'header must start with exactly one gitmoji'];
         },
         'header-max-length-no-emoji': ({ header }) => {
           if (!header) return [true];

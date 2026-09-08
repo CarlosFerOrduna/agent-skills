@@ -55,6 +55,7 @@ try {
 
   runCase('valid gitmoji header', 0, '✨ feat(auth): add JWT refresh-token rotation');
   runCase('missing gitmoji', 1, 'feat(auth): add JWT refresh-token rotation');
+  runCase('multiple gitmojis', 1, '✨✨✨ feat(auth): add thing');
   runCase('invalid type', 1, '✨ banana(auth): add thing');
   runCase('header over 72 (no emoji)', 1, `✨ feat(auth): ${'x'.repeat(95)}`);
   runCase('breaking change', 0, '✨ feat!: drop the old api');
