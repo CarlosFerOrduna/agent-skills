@@ -62,10 +62,12 @@ for (const name of skills) {
   const skillPath = path.join(skillsDir, name, 'SKILL.md');
   if (!fs.existsSync(skillPath)) fail(`skill '${name}' missing SKILL.md`);
 
-  const fm = parseFrontmatter(fs.readFileSync(skillPath, 'utf8'));
+  const contents = fs.readFileSync(skillPath, 'utf8');
+  const fm = parseFrontmatter(contents);
   if (fm.name !== name) fail(`${name}/SKILL.md frontmatter name mismatch: '${fm.name}'`);
   if (!fm.description) fail(`${name}/SKILL.md missing description`);
   if (fm.version !== pkgVersion) fail(`${name}/SKILL.md version '${fm.version}' != package.json '${pkgVersion}'`);
+  if (!contents.endsWith('\n')) fail(`${name}/SKILL.md must end with a final newline (.editorconfig)`);
 }
 
 // Claude Code installs against these manifests; every published version must
