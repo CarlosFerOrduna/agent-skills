@@ -1,6 +1,6 @@
 ---
 name: typeorm-mssql
-version: 0.5.0
+version: 0.5.1
 description: MSSQL-specific TypeORM conventions - camelCase identifiers, int identity primary keys, getutcdate timestamps, bit soft delete, and filtered unique indexes. Load alongside typeorm for SQL Server projects.
 ---
 

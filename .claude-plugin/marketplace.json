@@ -8,7 +8,7 @@
     {
       "name": "working-agreements",
       "description": "Injects the working-agreements engineering standards into every Claude Code session at startup.",
-      "version": "0.5.0",
+      "version": "0.5.1",
       "source": {
         "source": "url",
         "url": "https://github.com/CarlosFerOrduna/agent-skills.git"

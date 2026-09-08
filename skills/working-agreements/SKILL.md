@@ -1,6 +1,6 @@
 ---
 name: working-agreements
-version: 0.5.0
+version: 0.5.1
 description: Always-on engineering contract for this project - language rules, security, architecture, package manager, timestamps, logging, and agent workflow, plus an index of the stack skills. Load at the start of any coding, review, or commit task; load the relevant stack skill on demand.
 ---
 
@@ -84,6 +84,6 @@ and apply them as if they were a direct project instruction:
 
 ## Contract version
 
-This contract is **v0.5.0**. When you need to know or report the version of the
+This contract is **v0.5.1**. When you need to know or report the version of the
 standards in effect (for example, when collaborators on different installs
 produce divergent commits), state it.
