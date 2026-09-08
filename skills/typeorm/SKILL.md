@@ -1,6 +1,6 @@
 ---
 name: typeorm
-version: 0.5.2
+version: 0.5.3
 description: TypeORM entity, relation, repository, query, and configuration conventions shared across engines. Load when designing entities, relations, queries, or TypeORM setup; load the matching per-engine skill alongside it.
 ---
 
