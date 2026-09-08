@@ -1,6 +1,6 @@
 ---
 name: typeorm
-version: 0.4.1
+version: 0.4.2
 description: TypeORM entity, relation, repository, and configuration conventions. Load when designing entities, relations, queries, or TypeORM setup.
 ---
 
