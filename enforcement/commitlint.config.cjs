@@ -14,21 +14,9 @@
  * Add a git hook: `npx --no-install commitlint --edit $1` (husky 'commit-msg'
  * or plain .git/hooks/commit-msg).
  */
-"use strict";
+'use strict';
 
-const VALID_TYPES = [
-  "feat",
-  "fix",
-  "docs",
-  "style",
-  "refactor",
-  "perf",
-  "test",
-  "build",
-  "ci",
-  "chore",
-  "revert",
-];
+const VALID_TYPES = ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert'];
 
 // Exactly one emoji at the start of the header (with possible variation
 // selector and whitespace). A single pictographic keeps the leading-gitmoji
@@ -36,10 +24,10 @@ const VALID_TYPES = [
 // do not get stripped from the 72-character count.
 const EMOJI_RE = /^\p{Extended_Pictographic}\uFE0F?\s*/u;
 
-const withoutEmoji = (input) => input.replace(EMOJI_RE, "");
+const withoutEmoji = (input) => input.replace(EMOJI_RE, '');
 
 module.exports = {
-  extends: ["@commitlint/config-conventional"],
+  extends: ['@commitlint/config-conventional'],
   parserPreset: {
     parserOpts: {
       // Allow an optional leading gitmoji before `type(scope): subject`.
@@ -49,24 +37,24 @@ module.exports = {
       // value with a readable message instead of a parse failure.
       headerPattern:
         /^(?<emoji>\p{Extended_Pictographic}\uFE0F?\s*)?(?<type>\w+)(?:\((?<scope>[^)]+)\))?!?: (?<subject>.*)$/u,
-      headerCorrespondence: ["emoji", "type", "scope", "subject"],
+      headerCorrespondence: ['emoji', 'type', 'scope', 'subject'],
     },
   },
   rules: {
     // We enforce gitmoji + an emoji-aware length below; disable the stock rule.
-    "header-max-length": [0],
-    "type-enum": [2, "always", VALID_TYPES],
-    "header-leading-gitmoji": [2, "always"],
-    "header-max-length-no-emoji": [2, "always"],
+    'header-max-length': [0],
+    'type-enum': [2, 'always', VALID_TYPES],
+    'header-leading-gitmoji': [2, 'always'],
+    'header-max-length-no-emoji': [2, 'always'],
   },
   plugins: [
     {
       rules: {
-        "header-leading-gitmoji": ({ header }) => {
+        'header-leading-gitmoji': ({ header }) => {
           if (!header) return [true];
-          return [EMOJI_RE.test(header), "header must start with a gitmoji"];
+          return [EMOJI_RE.test(header), 'header must start with a gitmoji'];
         },
-        "header-max-length-no-emoji": ({ header }) => {
+        'header-max-length-no-emoji': ({ header }) => {
           if (!header) return [true];
           const text = withoutEmoji(header);
           return [

@@ -6,10 +6,10 @@
  * Mirrors the bootstrap pattern used by superpowers for opencode.
  */
 
-import path from "path";
-import fs from "fs";
-import os from "os";
-import { fileURLToPath } from "url";
+import path from 'path';
+import fs from 'fs';
+import os from 'os';
+import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -22,31 +22,37 @@ const extractAndStripFrontmatter = (content) => {
   const body = match[2];
   const frontmatter = {};
 
-  for (const line of frontmatterStr.split("\n")) {
-    const colonIdx = line.indexOf(":");
+  for (const line of frontmatterStr.split('\n')) {
+    const colonIdx = line.indexOf(':');
     if (colonIdx > 0) {
       const key = line.slice(0, colonIdx).trim();
       const value = line
         .slice(colonIdx + 1)
         .trim()
-        .replace(/^["']|["']$/g, "");
+        .replace(/^["']|["']$/g, '');
       frontmatter[key] = value;
     }
   }
 
-  return { frontmatter, content: body };
+  return {
+    frontmatter,
+    content: body,
+  };
 };
 
 // Normalize a path: trim whitespace, expand ~, resolve to absolute
 const normalizePath = (p, homeDir) => {
-  if (!p || typeof p !== "string") return null;
+  if (!p || typeof p !== 'string') return null;
+
   let normalized = p.trim();
   if (!normalized) return null;
-  if (normalized.startsWith("~/")) {
+
+  if (normalized.startsWith('~/')) {
     normalized = path.join(homeDir, normalized.slice(2));
-  } else if (normalized === "~") {
+  } else if (normalized === '~') {
     normalized = homeDir;
   }
+
   return path.resolve(normalized);
 };
 
@@ -66,13 +72,10 @@ export const WorkingAgreementsPlugin = async ({ directory }) => {
   //    opencode discovers that directory natively;
   //  - otherwise the repo's skills/ (git-backed plugin spec) is registered, which
   //    covers the fresh-machine install where ~/.agents/skills does not exist.
-  const repoSkillsDir = path.resolve(__dirname, "../../skills");
-  const homeSkillsDir = path.join(homeDir, ".agents", "skills");
-  const homeContract = path.join(
-    homeSkillsDir,
-    "working-agreements",
-    "SKILL.md",
-  );
+  const repoSkillsDir = path.resolve(__dirname, '../../skills');
+  const homeSkillsDir = path.join(homeDir, '.agents', 'skills');
+  const homeContract = path.join(homeSkillsDir, 'working-agreements', 'SKILL.md');
+
   let skillsDirs = [];
   if (fs.existsSync(homeContract)) {
     skillsDirs = [homeSkillsDir];
@@ -89,7 +92,7 @@ export const WorkingAgreementsPlugin = async ({ directory }) => {
     // Try to load the working-agreements skill
     let skillPath = null;
     for (const dir of skillsDirs) {
-      const candidate = path.join(dir, "working-agreements", "SKILL.md");
+      const candidate = path.join(dir, 'working-agreements', 'SKILL.md');
       if (fs.existsSync(candidate)) {
         skillPath = candidate;
         break;
@@ -100,7 +103,7 @@ export const WorkingAgreementsPlugin = async ({ directory }) => {
       return null;
     }
 
-    const fullContent = fs.readFileSync(skillPath, "utf8");
+    const fullContent = fs.readFileSync(skillPath, 'utf8');
     const { content } = extractAndStripFrontmatter(fullContent);
 
     const toolMapping = `**Tool Mapping for OpenCode:**
@@ -146,22 +149,17 @@ ${toolMapping}
     // Using a user message instead of a system message avoids:
     //   1. Token bloat from system messages repeated every turn
     //   2. Multiple system messages breaking some models
-    "experimental.chat.messages.transform": async (_input, output) => {
+    'experimental.chat.messages.transform': async (_input, output) => {
       const bootstrap = getBootstrapContent();
       if (!bootstrap || !output.messages.length) return;
-      const firstUser = output.messages.find((m) => m.info.role === "user");
+      const firstUser = output.messages.find((m) => m.info.role === 'user');
       if (!firstUser || !firstUser.parts.length) return;
 
       // Guard: skip if the first user message already contains the bootstrap.
-      if (
-        firstUser.parts.some(
-          (p) => p.type === "text" && p.text.includes("EXTREMELY_IMPORTANT"),
-        )
-      )
-        return;
+      if (firstUser.parts.some((p) => p.type === 'text' && p.text.includes('EXTREMELY_IMPORTANT'))) return;
 
       const ref = firstUser.parts[0];
-      firstUser.parts.unshift({ ...ref, type: "text", text: bootstrap });
+      firstUser.parts.unshift({ ...ref, type: 'text', text: bootstrap });
     },
   };
 };

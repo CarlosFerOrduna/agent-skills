@@ -1,14 +1,14 @@
 {
   "semi": true,
-  "singleQuote": false,
+  "singleQuote": true,
   "trailingComma": "all",
   "endOfLine": "lf",
+  "printWidth": 120,
   "overrides": [
     {
       "files": "*.md",
       "options": {
-        "proseWrap": "preserve",
-        "printWidth": 120
+        "proseWrap": "preserve"
       }
     }
   ]
