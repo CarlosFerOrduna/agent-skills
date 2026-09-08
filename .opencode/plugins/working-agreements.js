@@ -16,7 +16,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Simple frontmatter extraction (avoid a dependency for the bootstrap read)
 const extractAndStripFrontmatter = (content) => {
   const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return { frontmatter: {}, content };
+  if (!match) {
+    return {
+      frontmatter: {},
+      content,
+    };
+  }
 
   const frontmatterStr = match[1];
   const body = match[2];
@@ -30,6 +35,7 @@ const extractAndStripFrontmatter = (content) => {
         .slice(colonIdx + 1)
         .trim()
         .replace(/^["']|["']$/g, '');
+
       frontmatter[key] = value;
     }
   }
@@ -98,6 +104,7 @@ export const WorkingAgreementsPlugin = async ({ directory }) => {
         break;
       }
     }
+
     if (!skillPath) {
       _bootstrapCache = null;
       return null;
