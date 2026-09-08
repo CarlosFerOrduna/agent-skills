@@ -8,10 +8,10 @@ tools following the AGENTS.md / SKILL.md convention.
 Ownership is tracked in a manifest (`.agent-skills.json`) so upgrades work
 instead of a blind skip. Directories this installer recorded as its own are
 replaced (an `UPDATE 'name' old -> new` line is printed when the version
-differs). Directories installed before the manifest existed are adopted on
-first run: an untracked directory whose SKILL.md `name:` matches a shipped
-skill was placed by an old installer, so it is treated as owned. Foreign skill
-directories are left alone unless `--force` is passed.
+differs). A destination WITHOUT a manifest is adopted on first run only for the
+names and version the installer actually published before the manifest existed
+(v0.2.0) whose SKILL.md `name:` matches; everything else existing there is
+foreign and is skipped unless `--force` is passed.
 
 Usage:
     python install.py                # install new skills, upgrade owned ones,
@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -38,6 +39,15 @@ SOURCE_DIR = REPO_ROOT / "skills"
 DEST_ROOT = Path.home() / ".agents" / "skills"
 MANIFEST = ".agent-skills.json"
 LEGACY = ("using-working-agreements",)
+
+# Nombres que el installer publicó ANTES de existir el manifest (v0.2.0).
+# Es una lista de migración, no un catálogo: si crece, la adopción deja de
+# distinguir "instalación vieja mía" de "skill ajena con el mismo nombre".
+KNOWN_PRIOR = {"commit-conventions", "database", "nestjs-code-style", "testing-standards", "working-agreements"}
+# Única versión publicada antes del manifest.
+PRIOR_VERSION = "0.2.0"
+
+FRONTMATTER_RE = re.compile(r"^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)", re.MULTILINE)
 
 
 def parse_args() -> argparse.Namespace:
@@ -85,7 +95,10 @@ def frontmatter_field(directory: Path, field: str) -> str:
         text = skill_file.read_text(encoding="utf-8")[:4096]
     except OSError:
         return "?"
-    for line in text.splitlines()[:20]:
+    match = FRONTMATTER_RE.search(text)
+    if not match:
+        return "?"
+    for line in match.group(1).splitlines():
         key, _, value = line.partition(":")
         if key.strip() == field:
             return value.strip()
@@ -97,7 +110,7 @@ def skill_name(skill: Path) -> str:
 
 
 def skill_version(skill: Path) -> str:
-    return frontmatter_field(skill, "version") or "?"
+    return frontmatter_field(skill, "version")
 
 
 def replace(skill: Path, dest: Path) -> None:
@@ -134,6 +147,9 @@ def main() -> int:
 
     current = {skill.name for skill in skills}
     previous = read_manifest()
+    # La adopción es un evento único de migración: solo un destino sin manifest
+    # viene de antes de que el manifest existiera (v0.2.0).
+    adopting = not (DEST_ROOT / MANIFEST).is_file()
 
     if args.prune:
         prune(previous, current)
@@ -149,10 +165,17 @@ def main() -> int:
 
         owned_target = skill.name in previous
         if not owned_target:
-            # Adoption: an untracked directory whose frontmatter `name:`
-            # matches a shipped skill was placed by an installer that ran
-            # before the manifest existed. It is ours, not foreign.
-            if skill_name(dest) == skill.name:
+            # Adopción: un directorio existente es nuestro solo cuando el
+            # destino no tenía manifest, el nombre estaba publicado antes de
+            # que el manifest existiera, la versión es la de esa época y el
+            # `name:` del frontmatter coincide con la carpeta. Todo lo demás es
+            # ajeno y se reemplaza únicamente con --force.
+            if (
+                adopting
+                and skill.name in KNOWN_PRIOR
+                and skill_version(dest) == PRIOR_VERSION
+                and skill_name(dest) == skill.name
+            ):
                 owned_target = True
                 print(f"ADOPT '{skill.name}' ({skill_version(dest)})")
 
