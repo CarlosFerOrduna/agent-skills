@@ -1,6 +1,6 @@
 ---
 name: nestjs-code-style
-version: 0.3.0
+version: 0.3.1
 description: TypeScript / NestJS code style - symbol, directory, and file naming with responsibility suffixes, general code conventions, import style, type/enum/constant placement, and repository methods that express business intent. Load when writing or reviewing TypeScript / NestJS code.
 ---
 
