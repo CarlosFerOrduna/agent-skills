@@ -73,6 +73,7 @@ for (const name of skills) {
 for (const rel of ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json']) {
   const filePath = path.join(root, rel);
   const json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
   const versions = rel.endsWith('marketplace.json') ? json.plugins.map((plugin) => plugin.version) : [json.version];
   for (const version of versions) {
     if (version !== pkgVersion) fail(`${rel} version '${version}' != package.json '${pkgVersion}'`);
@@ -85,8 +86,10 @@ const indexed = new Set([...waText.matchAll(/^\s*- `([a-z0-9-]+)` —/gm)].map((
 const stack = new Set(skills.filter((name) => name !== 'working-agreements'));
 const missing = [...stack].filter((name) => !indexed.has(name)).sort();
 const extra = [...indexed].filter((name) => !stack.has(name)).sort();
-if (missing.length || extra.length)
+
+if (missing.length || extra.length) {
   fail(`contract stack index drift: missing=${JSON.stringify(missing)} extra=${JSON.stringify(extra)}`);
+}
 
 const versionMatch = waText.match(/\*\*v([0-9][0-9a-z.-]*)\*\*/);
 if (!versionMatch || versionMatch[1] !== pkgVersion) {
@@ -101,6 +104,7 @@ for (const name of skills) {
 for (const dir of runtimeDirs) {
   for (const filePath of walk(path.join(root, dir))) {
     const content = fs.readFileSync(filePath, 'utf8');
+
     for (const name of staleNames) {
       if (content.includes(name)) fail(`stale reference to '${name}' in ${path.relative(root, filePath)}`);
     }
@@ -115,8 +119,12 @@ function walk(dir) {
 
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) results.push(...walk(full));
-    else if (entry.isFile()) results.push(full);
+
+    if (entry.isDirectory()) {
+      results.push(...walk(full));
+    } else if (entry.isFile()) {
+      results.push(full);
+    }
   }
 
   return results;
