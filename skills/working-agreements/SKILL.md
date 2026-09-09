@@ -28,6 +28,10 @@ conflicts with an explicit user instruction, the user instruction wins.
 
 - Never commit `.env` files; keep secrets out of git via `.gitignore` and
   provide `.env.example` as the template.
+- Never operate on a database that is not the repo's local/Docker one. Dev or
+  staging credentials visible in `.env` or config are read-only information:
+  running migrations or writing to those environments is off limits, even when
+  reachable.
 - Never log: tokens, keys, passwords, decrypted config, or sensitive request
   bodies.
 - Joi validation schemas are the source of truth for env vars, validation, and
@@ -60,9 +64,15 @@ conflicts with an explicit user instruction, the user instruction wins.
 - Check `package.json` and the lockfile before assuming tooling is available.
 - Run the project's lint command before committing.
 - Verify tests according to the project's fork-specific test configuration.
+- Run local build, lint, and unit tests as part of finishing an implementation;
+  do not ask for permission first, just report the result.
 - Keep shared values (enums, seeds, config) synchronized across their sources.
 - Never `git commit`, `git push`, or stage changes without explicit user
   confirmation; report the finished work and its state first.
+- Synchronizing to external services (Postman sync, deploys, tickets) requires
+  an explicit ask each time.
+- Never self-arm autonomous background loops/wakeups; only run them when the
+  user explicitly invokes the loop command.
 - Write the commit message only when asked, following the patterns in the
   `commit-conventions` skill.
 
