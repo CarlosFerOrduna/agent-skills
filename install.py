@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Install editor-agnostic agent skills.
+"""Install editor-agnostic agent skills and slash commands.
 
 Copies every skill in ./skills to the user's global skills directory
 (~/.agents/skills), which is read by Zed, opencode, Claude Code, and other
-tools following the AGENTS.md / SKILL.md convention.
+tools following the AGENTS.md / SKILL.md convention. The slash commands in
+./commands are copied to each client's global command directory (opencode and
+Claude Code); Zed has no command files, so the `commit` skill acts as its
+/commit slash command.
 
 Ownership is tracked in a manifest (`.agent-skills.json`) so upgrades work
 instead of a blind skip. Directories this installer recorded as its own are
@@ -36,9 +39,16 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = REPO_ROOT / "skills"
+COMMANDS_DIR = REPO_ROOT / "commands"
 DEST_ROOT = Path.home() / ".agents" / "skills"
 MANIFEST = ".agent-skills.json"
 LEGACY = ("using-working-agreements",)
+
+# Harness -> (destination command directory, source subdirectory).
+COMMAND_TARGETS = {
+    "opencode": (Path.home() / ".config" / "opencode" / "command", COMMANDS_DIR / "opencode"),
+    "claude": (Path.home() / ".claude" / "commands", COMMANDS_DIR / "claude"),
+}
 
 # Nombres que el installer publicó ANTES de existir el manifest (v0.2.0).
 # Es una lista de migración, no un catálogo: si crece, la adopción deja de
@@ -131,6 +141,18 @@ def prune(previous: set[str], current: set[str]) -> None:
             shutil.rmtree(target)
 
 
+def install_commands() -> None:
+    """Copy each harness's slash commands to its global command directory."""
+    for client, (dest_dir, source_dir) in COMMAND_TARGETS.items():
+        if not source_dir.is_dir():
+            print(f"WARNING: commands directory not found: {source_dir}", file=sys.stderr)
+            continue
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        for source in sorted(source_dir.glob("*.md")):
+            shutil.copy2(source, dest_dir / source.name)
+            print(f"COMMAND '{source.stem}' -> {dest_dir / source.name}")
+
+
 def main() -> int:
     args = parse_args()
 
@@ -198,6 +220,7 @@ def main() -> int:
             skipped_foreign.append(skill.name)
 
     write_manifest(owned)
+    install_commands()
 
     if skipped_foreign:
         skipped = ", ".join(f"'{name}'" for name in skipped_foreign)
@@ -206,9 +229,9 @@ def main() -> int:
         print(f"{count} {noun} skipped (foreign: {skipped}); run --force to replace")
 
     print()
-    print(f"Done. Skills installed to {DEST_ROOT}")
+    print(f"Done. Skills installed to {DEST_ROOT} and commands to the harness dirs above.")
     print(
-        "Restart your editor (Zed / opencode / Claude Code) to pick up the new skills."
+        "Restart your editor (Zed / opencode / Claude Code) to pick up the new skills and commands."
     )
     return 0
 

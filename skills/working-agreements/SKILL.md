@@ -70,7 +70,9 @@ conflicts with an explicit user instruction, the user instruction wins.
 - At each natural commit point (a checkpoint reached or the requirement
   finished), pause and present the proposed commit message (following
   `commit-conventions`) with a summary of the changes; the user approves the
-  message before anything is staged or committed.
+  message before anything is staged or committed. OpenCode and Claude Code
+  expose this flow as `/commit` and `/push` commands; Zed as the `commit`
+  skill.
 - Never `git commit`, `git push`, or stage changes without that explicit
   approval; report the finished work and its state first.
 - Synchronizing to external services (Postman sync, deploys, tickets) requires
@@ -87,6 +89,7 @@ directly from `~/.agents/skills/` or the plugin/marketplace skills directory
 and apply them as if they were a direct project instruction:
 
 - `commit-conventions` — Conventional Commits with a leading gitmoji.
+- `commit` — the commit/push handshake: propose, present, and approve.
 - `nestjs-code-style` — TypeScript / NestJS style, naming, types, repositories.
 - `database` — versioned SQL migrations and ORM schema discipline.
 - `typeorm` — TypeORM entity, relation, repository, query, and configuration conventions.

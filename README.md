@@ -19,6 +19,7 @@ session only pays for the context it needs (progressive disclosure).
 | Skill                | Layer     | Description                                                                                                                                                                                                         |
 | -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `working-agreements` | always-on | The engineering contract: language, security, architecture, package manager, timestamps/logging, and the agent workflow, plus the index of stack skills. Injected directly by the harness hooks into every session. |
+| `commit`             | on-demand | The commit/push handshake: gather git state, propose a Conventional Commit message per `commit-conventions`, present it, and stop for approval before staging, committing, or pushing. |
 | `commit-conventions` | on-demand | Conventional Commits with a leading gitmoji: valid types, scopes from paths, header ≤ 72 excluding the emoji, body and breaking-changes rules.                                                                      |
 | `nestjs-code-style`  | on-demand | TypeScript / NestJS style: symbol/directory/file naming with responsibility suffixes, imports, types, constants, enums, and repository intent.                                                                      |
 | `database`           | on-demand | Versioned SQL migrations and ORM schema discipline: migration files as the source of truth, ORM never mutates the schema.                                                                                           |
@@ -38,7 +39,14 @@ python install.py --force    # also replace foreign skill directories
 python install.py --prune    # also remove owned skills no longer shipped
 ```
 
-This copies every skill in `skills/` to `~/.agents/skills/`.
+This copies every skill in `skills/` to `~/.agents/skills/`, and the slash
+commands in `commands/` to each client's global command directory:
+
+- opencode → `~/.config/opencode/command/` (`/commit`, `/push`)
+- Claude Code → `~/.claude/commands/` (`/commit`, `/push`)
+
+Zed has no command files yet; the `commit` skill itself is exposed there as a
+`/commit` slash command (Zed surfaces skills as slash commands).
 
 Installership is tracked in `.agent-skills.json`: a directory the installer
 recorded as its own is upgraded in place (an `UPDATE 'name' old -> new` line is
@@ -58,10 +66,12 @@ deletes skills it did not install, so foreign directories in `~/.agents/skills/`
 Copy each `skills/<name>/` folder into `~/.agents/skills/`:
 
 ```bash
-cp -r skills/working-agreements skills/commit-conventions \
-      skills/nestjs-code-style skills/database \
+cp -r skills/working-agreements skills/commit \
+      skills/commit-conventions skills/nestjs-code-style skills/database \
       skills/typeorm skills/typeorm-mssql skills/typeorm-pg \
       skills/testing-standards ~/.agents/skills/
+cp -r commands/opencode/. ~/.config/opencode/command/
+cp -r commands/claude/. ~/.claude/commands/
 ```
 
 After installing, restart your editor to pick up the new skills.
@@ -164,9 +174,16 @@ no lockfile in sync.
 
 ```
 .
-├── install.py                   # copies ./skills to ~/.agents/skills/ (--prune, manifest-tracked)
+├── install.py                   # copies ./skills + ./commands to the user's global config
 ├── package.json                 # npm metadata; required for git-backed plugin install
 ├── LICENSE                      # MIT
+├── commands/
+│   ├── opencode/
+│   │   ├── commit.md            # /commit funnel (propose message, wait for approval)
+│   │   └── push.md              # /push funnel (show ahead commits, push on approval)
+│   └── claude/
+│       ├── commit.md            # /commit funnel for Claude Code
+│       └── push.md              # /push funnel for Claude Code
 ├── enforcement/
 │   ├── README.md                # how to wire the base gates per project
 │   ├── commitlint.config.cjs    # gitmoji + 11 types + header ≤72 (no emoji)
@@ -189,6 +206,7 @@ no lockfile in sync.
 │   └── check-skills.mjs         # validates frontmatter, versions, index, README
 ├── skills/
 │   ├── working-agreements/      # always-on contract (injected) + stack index
+│   ├── commit/                  # commit/push handshake (propose, present, approve)
 │   ├── commit-conventions/      # Conventional Commits + gitmoji
 │   ├── nestjs-code-style/       # TS/NestJS style, naming, repositories
 │   ├── database/                # migrations + ORM schema discipline
