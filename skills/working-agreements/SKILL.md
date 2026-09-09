@@ -67,14 +67,16 @@ conflicts with an explicit user instruction, the user instruction wins.
 - Run local build, lint, and unit tests as part of finishing an implementation;
   do not ask for permission first, just report the result.
 - Keep shared values (enums, seeds, config) synchronized across their sources.
-- Never `git commit`, `git push`, or stage changes without explicit user
-  confirmation; report the finished work and its state first.
+- At each natural commit point (a checkpoint reached or the requirement
+  finished), pause and present the proposed commit message (following
+  `commit-conventions`) with a summary of the changes; the user approves the
+  message before anything is staged or committed.
+- Never `git commit`, `git push`, or stage changes without that explicit
+  approval; report the finished work and its state first.
 - Synchronizing to external services (Postman sync, deploys, tickets) requires
   an explicit ask each time.
 - Never self-arm autonomous background loops/wakeups; only run them when the
   user explicitly invokes the loop command.
-- Write the commit message only when asked, following the patterns in the
-  `commit-conventions` skill.
 
 ## Stack skills
 
