@@ -20,8 +20,10 @@ conflicts with an explicit user instruction, the user instruction wins.
 ## Language
 
 - Code in **English** with descriptive names: `getUserById`, not `getUsrById`.
-- **JSDoc** in English; **inline comments** in Spanish.
-- Comments are the last resort and explain **why**, never **what**.
+- **JSDoc** always in **English**, regardless of the surrounding prose; it is
+  API surface, not local note-taking.
+- **Inline comments** in Spanish and only to explain **why**, never restate
+  the **what** the code already says.
 - README and docs in English.
 
 ## Security

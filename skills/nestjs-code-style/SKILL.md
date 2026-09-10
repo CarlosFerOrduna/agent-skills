@@ -52,6 +52,31 @@ description: TypeScript / NestJS code style - symbol, directory, and file naming
   add dependencies without a clear reason.
 - No emojis inside source-code files.
 
+## Comments
+
+- **JSDoc/TypeDoc are always English**: they document the public contract, not
+  the file's prose, so surrounding Spanish inline comments do not change the
+  language of API docs. In a mixed file, JSDoc stays English.
+- Do not mirror doc blocks from Spanish codebases; write the contract in
+  English from scratch.
+
+  Avoid:
+
+  ```ts
+  /** Obtiene el usuario por id y devuelve su perfil. */
+  getUserProfile(id: string): Promise<UserProfile>
+  ```
+
+  Keep:
+
+  ```ts
+  /** Returns the user profile for the given id. */
+  getUserProfile(id: string): Promise<UserProfile>
+  ```
+
+- Inline `//` comments stay **Spanish** and only explain the **why** (domain
+  rationale, ordering traps); never restate the **what** line by line.
+
 ## Imports
 
 - Use **relative imports within a module** (`../module`, `../../feature/user`) so
