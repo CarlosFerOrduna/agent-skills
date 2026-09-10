@@ -1,6 +1,6 @@
 ---
 name: commit
-version: 0.5.7
+version: 0.5.8
 description: Prepare, present, and approve Conventional Commit and push operations. Use when the user runs /commit or /push, says 'commit' or 'push', or when a checkpoint or the requirement ends and a commit message must be approved first.
 ---
 

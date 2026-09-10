@@ -1,6 +1,6 @@
 {
   "name": "working-agreements",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Working-agreements engineering standards skills for Claude Code and opencode",
   "type": "module",
   "main": ".opencode/plugins/working-agreements.js",

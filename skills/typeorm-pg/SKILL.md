@@ -1,6 +1,6 @@
 ---
 name: typeorm-pg
-version: 0.5.7
+version: 0.5.8
 description: Postgres-specific TypeORM conventions - snake_case identifiers (no forced quoting), uuid primary keys, timestamptz UTC timestamps, boolean soft delete, and partial indexes. Load alongside typeorm for Postgres projects.
 ---
 
