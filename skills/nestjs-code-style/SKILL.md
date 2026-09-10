@@ -54,6 +54,10 @@ description: TypeScript / NestJS code style - symbol, directory, and file naming
 
 ## Comments
 
+- Readability first: names carry intent. Before adding a comment, make the
+  code express the idea itself — extract to a function with a descriptive name
+  (`hasExpiredLicense`, not `// verifica si expiro`). The comment is the
+  **last recourse**, only when the **why** cannot be carried by the code.
 - **JSDoc/TypeDoc are always English**: they document the public contract, not
   the file's prose, so surrounding Spanish inline comments do not change the
   language of API docs. In a mixed file, JSDoc stays English.

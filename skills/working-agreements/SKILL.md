@@ -20,6 +20,9 @@ conflicts with an explicit user instruction, the user instruction wins.
 ## Language
 
 - Code in **English** with descriptive names: `getUserById`, not `getUsrById`.
+- Make code **descriptive and readable on its own**: names carry intent, so a
+  comment is the last resort, added only when the code cannot explain the
+  **why** on its own.
 - **JSDoc** always in **English**, regardless of the surrounding prose; it is
   API surface, not local note-taking.
 - **Inline comments** in Spanish and only to explain **why**, never restate
