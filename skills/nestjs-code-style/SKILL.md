@@ -114,3 +114,37 @@ description: TypeScript / NestJS code style - symbol, directory, and file naming
   prefer `findResumable`, `applyTerminal` over `findOneWhere...`.
 - Repositories hide persistence implementation details from the application and
   domain layers.
+
+## Separate the call from its interpretation
+
+- An awaited (or otherwise meaningful) call that feeds a validation, a default,
+  or a derivation should first be assigned to a variable named after what it
+  returns; the validation/assignment happens on that variable in a separate
+  statement. Do not fuse the call into `??`, `||`, `===`, or an inline
+  argument.
+
+  Avoid:
+
+  ```ts
+  const isNewUser = (await this.redisService.sadd(usersKey, String(params.userId))) === 1;
+  const userId = (await this.redisService.get(usersKey)) ?? 1;
+  ```
+
+  Keep:
+
+  ```ts
+  const insertCount = await this.redisService.sadd(usersKey, String(params.userId));
+  const isNewUser = insertCount === 1;
+
+  const existing = await this.redisService.get(usersKey);
+  const userId = existing ?? 1;
+  ```
+
+  The raw result stays available for inspection and several derivations (log +
+  decision, branching), and the intent reads from the derived names. A
+  `??`/`||` default is only honest once it sits on an assigned raw result; a
+  default applied to a coded count (SADD returning 1 or 0) usually masks the
+  wrong thing, since that call never returns `null`.
+- Do not stretch this into ceremony: a call already stored in its own variable
+  before a simple check needs no extra indirection. The rule targets calls
+  embedded in a compound expression.
