@@ -78,6 +78,7 @@ hotfixes and security fixes are still a `fix`, never a new type:
 ## Other rules
 
 - Never reference tickets, issues, or PR numbers.
+- Never include `Co-Authored-By:` trailers in commit messages.
 - Only return a commit message when asked to generate one.
 
 Example:

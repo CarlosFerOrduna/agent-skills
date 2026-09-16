@@ -84,6 +84,7 @@ conflicts with an explicit user instruction, the user instruction wins.
   an explicit ask each time.
 - Never self-arm autonomous background loops/wakeups; only run them when the
   user explicitly invokes the loop command.
+- Never include `Co-Authored-By:` trailers in commit messages.
 
 ## Stack skills
 
