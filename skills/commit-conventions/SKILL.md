@@ -48,8 +48,8 @@ hotfixes and security fixes are still a `fix`, never a new type:
 
 - The `scope` is based on the affected file **PATH**: the service directory or a
   module inside it, never a class name or symbol.
-- Prefer short scopes: `credentials`, `crypto`, `auth`, `identity` for
-  `identity-orchestrator`, `assets` for `asset-gateway`.
+- Prefer short scopes derived from the service path (`payments` for a payment
+  service, `ui` for a web client), not the full repo or module name.
 - Omit the scope when it adds no signal or the header would exceed the limit.
 
 ## Header length

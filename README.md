@@ -27,6 +27,7 @@ session only pays for the context it needs (progressive disclosure).
 | `typeorm-mssql`      | on-demand | MSSQL TypeORM conventions: camelCase identifiers, `int` identity keys, `getutcdate()` timestamps, `bit` soft delete, filtered unique indexes. |
 | `typeorm-pg`         | on-demand | Postgres TypeORM conventions: snake_case identifiers (no forced quoting), `uuid` keys, `timestamptz` UTC timestamps, `boolean` soft delete, partial indexes. |
 | `testing-standards`  | on-demand | Jest, unit tests alongside code, integration tests in `test/`, ephemeral tests removed when done.                                                                                                                   |
+| `code-intelligence`  | on-demand | Codebase search and graph navigation: ripgrep, ast-grep, and graphify with capability detection and fallbacks.                                                                                                        |
 
 ## Install the skills
 
@@ -69,7 +70,7 @@ Copy each `skills/<name>/` folder into `~/.agents/skills/`:
 cp -r skills/working-agreements skills/commit \
       skills/commit-conventions skills/nestjs-code-style skills/database \
       skills/typeorm skills/typeorm-mssql skills/typeorm-pg \
-      skills/testing-standards ~/.agents/skills/
+      skills/testing-standards skills/code-intelligence ~/.agents/skills/
 cp -r commands/opencode/. ~/.config/opencode/command/
 cp -r commands/claude/. ~/.claude/commands/
 ```
@@ -213,7 +214,8 @@ no lockfile in sync.
 │   ├── typeorm/                 # TypeORM portable conventions (entities, repositories, config)
 │   ├── typeorm-mssql/           # TypeORM for SQL Server (identifiers, keys, indexes)
 │   ├── typeorm-pg/              # TypeORM for Postgres (identifiers, keys, indexes)
-│   └── testing-standards/       # Jest, test layout
+│   ├── testing-standards/       # Jest, test layout
+│   └── code-intelligence/       # codebase search and graph navigation
 └── README.md
 ```
 

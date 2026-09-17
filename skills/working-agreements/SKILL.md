@@ -102,6 +102,7 @@ and apply them as if they were a direct project instruction:
 - `typeorm-mssql` — MSSQL-specific TypeORM conventions (identifiers, keys, filtered indexes).
 - `typeorm-pg` — Postgres-specific TypeORM conventions (identifiers, keys, partial indexes).
 - `testing-standards` — Jest, unit and integration test layout.
+- `code-intelligence` — codebase search and graph navigation (ripgrep, ast-grep, graphify).
 
 ## Contract version
 
