@@ -1,6 +1,6 @@
 ---
 name: code-intelligence
-version: 0.5.10
+version: 0.5.11
 description: Codebase search and graph navigation - ripgrep (fast text search), ast-grep (structural patterns), and graphify (architecture graphs when graphify-out exists). Load when searching code, tracing references, understanding file relationships, or answering architecture questions; detects which tools exist and falls back to built-in search.
 ---
 

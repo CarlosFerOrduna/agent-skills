@@ -1,6 +1,6 @@
 ---
 name: testing-standards
-version: 0.5.10
+version: 0.5.11
 description: Testing conventions - Jest framework, unit tests alongside the code they cover, integration tests in a separate test/ directory, and ephemeral agent tests removed when the work is done. Load when writing or modifying tests.
 ---
 
