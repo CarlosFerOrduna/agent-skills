@@ -67,10 +67,13 @@ conflicts with an explicit user instruction, the user instruction wins.
 ## Agent workflow
 
 - Check `package.json` and the lockfile before assuming tooling is available.
-- Run the project's lint command before committing.
+- Lint only the session's changed files (`git diff --name-only` plus untracked),
+  never the whole project. Prefer the per-file lint command (`npx eslint <files>`
+  and similar) when the repo only exposes a whole-project script; report issues
+  in the touched scope only, and do not let untouched files add noise.
+- Run the project's full build and unit tests after finishing an
+  implementation; do not ask for permission first, just report the result.
 - Verify tests according to the project's fork-specific test configuration.
-- Run local build, lint, and unit tests as part of finishing an implementation;
-  do not ask for permission first, just report the result.
 - Keep shared values (enums, seeds, config) synchronized across their sources.
 - At each natural commit point (a checkpoint reached or the requirement
   finished), pause and present the proposed commit message (following
