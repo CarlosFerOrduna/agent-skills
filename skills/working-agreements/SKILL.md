@@ -23,10 +23,13 @@ conflicts with an explicit user instruction, the user instruction wins.
 - Make code **descriptive and readable on its own**: names carry intent, so a
   comment is the last resort, added only when the code cannot explain the
   **why** on its own.
-- **JSDoc** always in **English**, regardless of the surrounding prose; it is
+- **JSDoc/TSDoc** always in **English**, regardless of the surrounding prose; it is
   API surface, not local note-taking.
-- **Inline comments** in Spanish and only to explain **why**, never restate
-  the **what** the code already says.
+- **Inline comments** in **Spanish** only when they explain the non-obvious
+  **why** and never restate the **what** the code already says. This rule
+  applies only to JavaScript/TypeScript inline comments (`//`, `/* */`); for
+  other languages (Bash/Shell `#`, Python `#`, Makefiles, YAML `#`, SQL `--`,
+  etc.), comments are in **English**.
 - README and docs in English.
 
 ## Security
@@ -51,6 +54,10 @@ conflicts with an explicit user instruction, the user instruction wins.
   layer.
 - Prefer the smallest simple solution that satisfies the requirement. Reviews
   should push toward simplicity, not ceremony.
+- Return multiline object literals with each property on its own line and a
+  trailing comma when the language supports it, to keep diffs small and future
+  additions localized. Single-property or very trivial object literals may be
+  inlined when it improves readability without sacrificing diffs.
 
 ## Package manager
 
