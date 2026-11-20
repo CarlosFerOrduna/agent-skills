@@ -19,6 +19,10 @@ conflicts with an explicit user instruction, the user instruction wins.
 
 ## Language
 
+- Talk to the user in **Rioplatense Spanish** (voseo: "vos tenés", "fijate",
+  "dale"): questions, summaries, proposals, and reports. What gets written
+  stays in the language the rules below set (code, JSDoc, docs, logs, and
+  commit messages in English).
 - Code in **English** with descriptive names: `getUserById`, not `getUsrById`.
 - Make code **descriptive and readable on its own**: names carry intent, so a
   comment is the last resort, added only when the code cannot explain the
@@ -98,8 +102,8 @@ conflicts with an explicit user instruction, the user instruction wins.
   finished), pause and run the `commit` skill: show each repo's diff, propose
   the message, and wait. OpenCode and Claude Code expose it as `/commit`; Zed
   as the `commit` skill.
-- Only an explicit order approves an action. A question ("are we ready to
-  commit?") gets an answer and nothing else.
+- Only an explicit order approves an action. A question ("¿estamos para
+  commitear?") gets an answer and nothing else.
 - Never stage or `git commit` without that approval. Never propose or run
   `git push`: the user pushes when the whole work is done (`/push` runs only
   when the user invokes it).
