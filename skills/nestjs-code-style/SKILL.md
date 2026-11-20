@@ -96,6 +96,41 @@ description: TypeScript / NestJS code style - symbol, directory, and file naming
 - Do not colocate shared types with the classes that consume them when a
   `types/` location exists.
 
+## Type assertions
+
+- No `as` assertions, including `(await x) as T`: narrow the type instead with
+  a type guard (`typeof`, `instanceof`, `in`) or a predicate
+  (`isUser(value): value is User`).
+- `as const` is not a cast and stays allowed (see Constants). For a literal
+  that must match a type, use `satisfies`.
+- Tests are exempt (`*.spec.ts` and `test/`): mocks and fixtures may use `as`,
+  for example `repo as jest.Mocked<UserRepository>`.
+
+## Function parameters
+
+- Three or more parameters go in a single object parameter with a named type,
+  placed in `types/` or derived with `Pick<>` from an existing type.
+- Signatures fixed by a framework or library are exempt: DI constructors,
+  middleware `(req, res, next)`, callbacks such as `reduce`.
+
+  Avoid:
+
+  ```ts
+  createSession(userId: string, casinoId: string, deviceId: string)
+  ```
+
+  Keep:
+
+  ```ts
+  createSession({ userId, casinoId, deviceId }: CreateSessionParams)
+  ```
+
+## Utilities
+
+- Utilities are classes with static methods, one class per `.util.ts` file.
+  The class name is a noun, the method a verb: `Currency.format(amount)` in
+  `currency.util.ts`.
+
 ## Enums
 
 - When a value exists across multiple sources (TypeScript, database, seeds,

@@ -77,7 +77,8 @@ hotfixes and security fixes are still a `fix`, never a new type:
 
 ## Other rules
 
-- Never reference tickets, issues, or PR numbers.
+- Never reference tickets, issues, PR numbers, or plan step numbers (`PP-42`,
+  `#12`, `step 3`).
 - Never include `Co-Authored-By:` trailers in commit messages.
 - Only return a commit message when asked to generate one.
 
