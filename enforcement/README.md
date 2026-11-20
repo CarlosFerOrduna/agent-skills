@@ -37,7 +37,7 @@ npx --no-install commitlint --edit "$1"
 - `header-max-length-no-emoji` — ≤72 characters excluding the emoji (handles
   U+FE0F variation selectors).
 
-## Setup (ESLint filename-case)
+## Setup (ESLint)
 
 ```bash
 npm install -D eslint @eslint/js typescript-eslint eslint-plugin-unicorn
@@ -46,10 +46,18 @@ npm install -D eslint @eslint/js typescript-eslint eslint-plugin-unicorn
 ```
 
 `unicorn/filename-case` enforces lowercase `kebab-case`, the highest-value,
-lowest-cost rule (barrel `index.ts` and `*.config.*` are exempt). The
-`no-restricted-imports` block for deep relative chains is optional and commented
-out: the import convention (relative within a module, `@/` alias across
-boundaries) is enforced only if the team opts in.
+lowest-cost rule (barrel `index.ts` and `*.config.*` are exempt).
+
+Two more rules back the `nestjs-code-style` skill:
+`@typescript-eslint/consistent-type-assertions` forbids `as` casts (`as const`
+stays allowed), and a `no-restricted-syntax` selector forces 3+ parameters
+into a single typed object (DI constructors and callbacks passed to a call
+are exempt). A final override turns the cast rule off for `*.spec.ts` and
+`test/`, where mocks and fixtures need it.
+
+The `no-restricted-imports` block for deep relative chains is optional and
+commented out: the import convention (relative within a module, `@/` alias
+across boundaries) is enforced only if the team opts in.
 
 ## Setup (gitleaks on commit)
 
@@ -63,10 +71,10 @@ pre-commit install        # wires the gitleaks + hygiene hooks
 pre-commit autoupdate
 ```
 
-> Do not install gitleaks from npm (`pipx install gitleaks`, `npm install -D
-gitleaks`, `scoop/bower per platform`): the npm `gitleaks` package is an
-> unrelated third-party mirror. The official distribution channels are the
-> GitHub release binaries, `brew`, `choco`, and the pre-commit hook above.
+> Do not install gitleaks from npm (`npm install -D gitleaks`): the npm
+> `gitleaks` package is an unrelated third-party mirror. The official
+> distribution channels are the GitHub release binaries, `brew`, `choco`, and
+> the pre-commit hook above.
 
 Copy the baseline too:
 

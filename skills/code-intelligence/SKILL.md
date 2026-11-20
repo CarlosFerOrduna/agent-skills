@@ -120,6 +120,7 @@ every agent knows what to prefer. The section should stay minimal:
 
 ```markdown
 ## Codebase search
+
 - `rg <pattern>` for fast text search (ripgrep installed)
 - `sg -p '<pattern>'` (ast-grep) for structural searches
 - `graphify-out/` present: use the graph for architecture questions (see `/graphify`)
