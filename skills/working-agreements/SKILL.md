@@ -1,6 +1,6 @@
 ---
 name: working-agreements
-version: 0.5.13
+version: 0.5.14
 description: Always-on engineering contract for this project - language rules, security, architecture, package manager, timestamps, logging, and agent workflow, plus an index of the stack skills. Load at the start of any coding, review, or commit task; load the relevant stack skill on demand.
 ---
 
@@ -19,6 +19,10 @@ conflicts with an explicit user instruction, the user instruction wins.
 
 ## Language
 
+- Talk to the user in **Rioplatense Spanish** (voseo: "vos tenés", "fijate",
+  "dale"): questions, summaries, proposals, and reports. What gets written
+  stays in the language the rules below set (code, JSDoc, docs, logs, and
+  commit messages in English).
 - Code in **English** with descriptive names: `getUserById`, not `getUsrById`.
 - Make code **descriptive and readable on its own**: names carry intent, so a
   comment is the last resort, added only when the code cannot explain the
@@ -31,6 +35,16 @@ conflicts with an explicit user instruction, the user instruction wins.
   other languages (Bash/Shell `#`, Python `#`, Makefiles, YAML `#`, SQL `--`,
   etc.), comments are in **English**.
 - README and docs in English.
+
+## Documentation
+
+- Update `docs/*.md` (flow, decisions, history) in the same change as the code
+  they describe, never in a follow-up.
+- JSDoc and `docs/*.md` complement each other: JSDoc documents a symbol's
+  contract, `docs/*.md` the flow and the decisions across symbols. Do not
+  duplicate one in the other.
+- Title doc sections by topic. Never cite ticket ids (`PP-42`) or plan step
+  numbers in docs: they mean nothing once the ticket or the plan is gone.
 
 ## Security
 
@@ -54,16 +68,18 @@ conflicts with an explicit user instruction, the user instruction wins.
   layer.
 - Prefer the smallest simple solution that satisfies the requirement. Reviews
   should push toward simplicity, not ceremony.
-- Return multiline object literals with each property on its own line and a
-  trailing comma when the language supports it, to keep diffs small and future
-  additions localized. Single-property or very trivial object literals may be
-  inlined when it improves readability without sacrificing diffs.
+- Return object literals multiline, one property per line with a trailing
+  comma when the language supports it, even when the object has a single
+  property: diffs stay small and later additions stay localized.
 
 ## Package manager
 
 - Determine the package manager from the project **lockfile**, never from
   README or Dockerfiles.
 - In a pnpm project never introduce `yarn.lock` or `package-lock.json`.
+- Docs show commands with `npm` (`npm install`, `npm run build`) even when the
+  project runs on another manager, so readers are not tied to one; execution
+  still follows the lockfile.
 
 ## Timestamps and logging
 
@@ -83,15 +99,20 @@ conflicts with an explicit user instruction, the user instruction wins.
 - Verify tests according to the project's fork-specific test configuration.
 - Keep shared values (enums, seeds, config) synchronized across their sources.
 - At each natural commit point (a checkpoint reached or the requirement
-  finished), pause and present the proposed commit message (following
-  `commit-conventions`) with a summary of the changes; the user approves the
-  message before anything is staged or committed. OpenCode and Claude Code
-  expose this flow as `/commit` and `/push` commands; Zed as the `commit`
-  skill.
-- Never `git commit`, `git push`, or stage changes without that explicit
-  approval; report the finished work and its state first.
-- Synchronizing to external services (Postman sync, deploys, tickets) requires
-  an explicit ask each time.
+  finished), pause and run the `commit` skill: show each repo's diff, propose
+  the message, and wait. OpenCode and Claude Code expose it as `/commit`; Zed
+  as the `commit` skill.
+- Only an explicit order approves an action. A question ("¿estamos para
+  commitear?") gets an answer and nothing else.
+- Never stage or `git commit` without that approval. Never propose or run
+  `git push`: the user pushes when the whole work is done (`/push` runs only
+  when the user invokes it).
+- External services (Plane and other trackers, Postman, deploys): reading is
+  free; writing requires an explicit ask each time. Any text to publish
+  (comment, description) is shown as a draft and waits for approval, like a
+  commit message.
+- Design discussions: conclusion first, one line per decision, one
+  recommendation. Skip long pros/cons lists unless asked.
 - Never self-arm autonomous background loops/wakeups; only run them when the
   user explicitly invokes the loop command.
 - Never include `Co-Authored-By:` trailers in commit messages.
@@ -116,6 +137,6 @@ and apply them as if they were a direct project instruction:
 
 ## Contract version
 
-This contract is **v0.5.13**. When you need to know or report the version of the
+This contract is **v0.5.14**. When you need to know or report the version of the
 standards in effect (for example, when collaborators on different installs
 produce divergent commits), state it.

@@ -7,7 +7,7 @@ for the consuming project repo (not for the skills repo itself).
 | Tool       | Enforces                        | File                      |
 | ---------- | ------------------------------- | ------------------------- |
 | commitlint | gitmoji + 11 types + header ≤72 | `commitlint.config.cjs`   |
-| ESLint     | `unicorn/filename-case` (kebab) | `eslint.config.mjs`       |
+| ESLint     | kebab files, no `as`, ≤2 params | `eslint.config.mjs`       |
 | gitleaks   | no secrets in commits           | `.gitleaks.toml`          |
 | pre-commit | gitleaks + hygiene hooks        | `.pre-commit-config.yaml` |
 
@@ -20,7 +20,7 @@ What stays in the skills (not lintable):
 ## Setup (commitlint + gitmoji header)
 
 ```bash
-pnpm add -D @commitlint/cli @commitlint/config-conventional
+npm install -D @commitlint/cli @commitlint/config-conventional
 cp enforcement/commitlint.config.cjs <project>/commitlint.config.cjs
 ```
 
@@ -40,7 +40,7 @@ npx --no-install commitlint --edit "$1"
 ## Setup (ESLint filename-case)
 
 ```bash
-pnpm add -D eslint @eslint/js typescript-eslint eslint-plugin-unicorn
+npm install -D eslint @eslint/js typescript-eslint eslint-plugin-unicorn
 # copy the relevant fragment from enforcement/eslint.config.mjs into the
 # project's eslint.config.mjs
 ```
@@ -63,7 +63,7 @@ pre-commit install        # wires the gitleaks + hygiene hooks
 pre-commit autoupdate
 ```
 
-> Do not install gitleaks from npm (`pipx install gitleaks`, `pnpm add -D
+> Do not install gitleaks from npm (`pipx install gitleaks`, `npm install -D
 gitleaks`, `scoop/bower per platform`): the npm `gitleaks` package is an
 > unrelated third-party mirror. The official distribution channels are the
 > GitHub release binaries, `brew`, `choco`, and the pre-commit hook above.
