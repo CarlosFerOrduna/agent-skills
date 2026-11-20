@@ -180,6 +180,7 @@ description: TypeScript / NestJS code style - symbol, directory, and file naming
   `??`/`||` default is only honest once it sits on an assigned raw result; a
   default applied to a coded count (SADD returning 1 or 0) usually masks the
   wrong thing, since that call never returns `null`.
+
 - Do not stretch this into ceremony: a call already stored in its own variable
   before a simple check needs no extra indirection. The rule targets calls
   embedded in a compound expression.
