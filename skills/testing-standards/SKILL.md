@@ -1,7 +1,7 @@
 ---
 name: testing-standards
-version: 0.5.14
-description: Testing conventions - Jest framework, unit tests alongside the code they cover, integration tests in a separate test/ directory, and ephemeral agent tests removed when the work is done. Load when writing or modifying tests.
+version: 0.5.15
+description: Testing conventions - Jest framework, unit specs colocated in src/ or under test/ depending on the project, integration tests in a separate test/ directory, and ephemeral agent tests removed when the work is done. Load when writing or modifying tests.
 ---
 
 # Testing Standards
@@ -14,12 +14,14 @@ description: Testing conventions - Jest framework, unit tests alongside the code
 
 ## Unit tests
 
-- Unit tests live alongside the code they test:
-
-```text
-user.service.ts
-user.service.spec.ts
-```
+- Spec files are named after the file they cover: `<name>.spec.ts`.
+- Each project picks one of two layouts:
+  - **Colocated**: the spec sits next to the file in `src/`
+    (`src/users/user.service.ts` + `src/users/user.service.spec.ts`).
+  - **Separate**: specs live in their own `test/` folder, outside `src/`.
+- Follow the layout the project already uses: check the Jest config (`roots`,
+  `rootDir`, `testRegex`) and the existing specs, and the project's
+  `AGENTS.md` when it states one. Never mix both layouts in one project.
 
 ## Integration tests
 
