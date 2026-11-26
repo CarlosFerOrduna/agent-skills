@@ -26,7 +26,7 @@ session only pays for the context it needs (progressive disclosure).
 | `typeorm`            | on-demand | Portable TypeORM mapping and API conventions: explicit columns and names, relations, repositories, queries, `synchronize: false`. Engine decisions live in the per-engine skills below.                             |
 | `typeorm-mssql`      | on-demand | MSSQL TypeORM conventions: camelCase identifiers, `int` identity keys, `getutcdate()` timestamps, `bit` soft delete, filtered unique indexes.                                                                       |
 | `typeorm-pg`         | on-demand | Postgres TypeORM conventions: snake_case identifiers (no forced quoting), `uuid` keys, `timestamptz` UTC timestamps, `boolean` soft delete, partial indexes.                                                        |
-| `testing-standards`  | on-demand | Jest, unit specs colocated or under test/ per project, integration tests in test/, ephemeral tests removed when done.                                                                                               |
+| `testing-standards`  | on-demand | Jest and the testing honeycomb: service tests in test/ against real infra, unit specs beside the class only for isolated logic, ephemeral tests removed when done.                                                  |
 | `code-intelligence`  | on-demand | Codebase search and graph navigation: ripgrep, ast-grep, and graphify with capability detection and fallbacks.                                                                                                      |
 
 ## Install the skills
@@ -214,7 +214,7 @@ no lockfile in sync.
 │   ├── typeorm/                 # TypeORM portable conventions (entities, repositories, config)
 │   ├── typeorm-mssql/           # TypeORM for SQL Server (identifiers, keys, indexes)
 │   ├── typeorm-pg/              # TypeORM for Postgres (identifiers, keys, indexes)
-│   ├── testing-standards/       # Jest, test layout
+│   ├── testing-standards/       # Jest, honeycomb strategy, test layout
 │   └── code-intelligence/       # codebase search and graph navigation
 └── README.md
 ```

@@ -1,6 +1,6 @@
 ---
 name: working-agreements
-version: 0.5.15
+version: 0.5.16
 description: Always-on engineering contract for this project - language rules, security, architecture, package manager, timestamps, logging, and agent workflow, plus an index of the stack skills. Load at the start of any coding, review, or commit task; load the relevant stack skill on demand.
 ---
 
@@ -132,11 +132,11 @@ and apply them as if they were a direct project instruction:
 - `typeorm` — TypeORM entity, relation, repository, query, and configuration conventions.
 - `typeorm-mssql` — MSSQL-specific TypeORM conventions (identifiers, keys, filtered indexes).
 - `typeorm-pg` — Postgres-specific TypeORM conventions (identifiers, keys, partial indexes).
-- `testing-standards` — Jest, unit and integration test layout.
+- `testing-standards` — Jest, honeycomb strategy, unit and service test layout.
 - `code-intelligence` — codebase search and graph navigation (ripgrep, ast-grep, graphify).
 
 ## Contract version
 
-This contract is **v0.5.15**. When you need to know or report the version of the
+This contract is **v0.5.16**. When you need to know or report the version of the
 standards in effect (for example, when collaborators on different installs
 produce divergent commits), state it.
